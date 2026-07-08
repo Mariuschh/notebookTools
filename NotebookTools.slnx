@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="src/NotebookTools/NotebookTools.csproj" Id="7eba32a1-8fda-46e1-aa19-e8c468fe1d3b" />
+  <Project Path="tests/NotebookTools.Tests/NotebookTools.Tests.csproj" Id="876acf7e-7f90-46a0-b908-8c08f44e0708" />
+</Solution>
