@@ -1,4 +1,5 @@
-﻿using NotebookTools.Help;
+﻿using System.Text.Json;
+using NotebookTools.Notebook;
 
 namespace NotebookTools
 {
@@ -6,10 +7,12 @@ namespace NotebookTools
     {
         static void Main(string[] args)
         {
-            if (args.Length == 0 || args[0] == "help" || args[0] == "--help")
+            List<Notebook.Notebook> cells = NotebookReader.LoadCells(NotebookReader.FilePath);
+
+            foreach (Notebook.Notebook cell in cells)
             {
-                Console.WriteLine(HelpText.GetText());
-                return;
+                Console.WriteLine(cell.Type);
+                Console.WriteLine(cell.Source);
             }
         }
     }
