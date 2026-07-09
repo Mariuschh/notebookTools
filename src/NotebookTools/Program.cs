@@ -1,15 +1,42 @@
-﻿using NotebookTools.Help;
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Text.Json;
 
 namespace NotebookTools
 {
-    public class Program
+    class Program
     {
         static void Main(string[] args)
         {
-            if (args.Length == 0 || args[0] == "help" || args[0] == "--help")
+            string json = File.ReadAllText( @"D:\Berufschule\2. BfK-S Projekt\notebookTools\tests\NotebookTools.Tests\TestData\example.ipynb");
+
+            using JsonDocument doc = JsonDocument.Parse(json);
+
+            JsonElement cells = doc.RootElement.GetProperty("cells");
+
+            int nummer = 1;
+
+            foreach (JsonElement cell in cells.EnumerateArray())
             {
-                Console.WriteLine(HelpText.GetText());
-                return;
+                string typ = cell.GetProperty("cell_type").GetString();
+
+                string inhalt = string.Concat(
+                    cell.GetProperty("source")
+                        .EnumerateArray()
+                        .Select(x => x.GetString())
+                )       .Replace("\n", " ");
+
+                if (typ == "code")          // Das die | gleichen abstand haben und gleich anfangen 
+                {
+                    Console.WriteLine($"{nummer} | code     | {inhalt}");
+                }
+                else 
+                {
+                    Console.WriteLine($"{nummer} | markdown | {inhalt}");
+                }
+
+                nummer++;
             }
         }
     }
