@@ -4,14 +4,33 @@ namespace NotebookTools.Notebook;
 
 public class NotebookReader
 {
-    public static string FilePath = @"C:\Users\Ziegler\OneDrive - GTÜ mbH\GTÜ\Berufsschule\BfK-S\NotebookTools\notebookTools\tests\NotebookTools.Tests\TestData\example.ipynb";
-    public static List<Notebook> LoadCells(string filePath)
+    public static Notebook LoadNotebook(string filePath)
     {
-        FilePath = filePath;
-        string jsonString = File.ReadAllText(filePath);
-            
-        Notebook notebook = JsonSerializer.Deserialize<Notebook>(jsonString)!;
+        if (string.IsNullOrWhiteSpace(filePath))
+        {
+            throw new ArgumentException(
+                "Es wurde kein Dateipfad angegeben.",
+                nameof(filePath));
+        }
 
-        return new List<Notebook>();
+        if (!File.Exists(filePath))
+        {
+            throw new FileNotFoundException(
+                "Die Notebook-Datei wurde nicht gefunden.",
+                filePath);
+        }
+
+        string jsonString = File.ReadAllText(filePath);
+
+        Notebook? notebook =
+            JsonSerializer.Deserialize<Notebook>(jsonString);
+
+        if (notebook is null)
+        {
+            throw new InvalidDataException(
+                "Die Notebook-Datei konnte nicht eingelesen werden.");
+        }
+
+        return notebook;
     }
 }

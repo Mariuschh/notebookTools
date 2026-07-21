@@ -7,13 +7,12 @@ namespace NotebookTools
     {
         static void Main(string[] args)
         {
-            List<Notebook.Notebook> cells = NotebookReader.LoadCells(NotebookReader.FilePath);
+        string filePath = @"C:\Users\Ziegler\OneDrive - GTÜ mbH\GTÜ\Berufsschule\BfK-S\NotebookTools\notebookTools\tests\NotebookTools.Tests\TestData\example.ipynb";
+        
+            List<NotebookCell> cells = NotebookReader.LoadNotebook(filePath).Cells;
+            
+            Notebook.Notebook notebook = NotebookReader.LoadNotebook(filePath);
 
-            foreach (Notebook.Notebook cell in cells)
-            {
-                Console.WriteLine(cell.Type);
-                Console.WriteLine(cell.Source);
-            }
         }
     }
 }
