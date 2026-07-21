@@ -9,7 +9,26 @@ namespace NotebookTools
     {
         static void Main(string[] args)
         {
-            string json = File.ReadAllText( @"D:\Berufschule\2. BfK-S Projekt\notebookTools\tests\NotebookTools.Tests\TestData\example.ipynb");
+                                                              
+            string ordner = Directory.GetCurrentDirectory(); // Ordner von dem aus das Programm gestartet wurde
+
+            Console.WriteLine($"Aktueller Ordner: {ordner}");
+
+          
+            Console.Write("Bitte Namen der .ipynb-Datei eingeben: ");// Benutzer gibt Dateiname ein 
+            string dateiname = Console.ReadLine();
+
+            
+            string pfad = Path.Combine(ordner, dateiname); // Zusammensetzen des Pfades 
+
+           
+            if (!File.Exists(pfad)) // Prüfen ob Datei überhaupt existiert 
+            {
+                Console.WriteLine($"Fehler: Datei nicht gefunden unter '{pfad}'.");
+                return;
+            }
+
+            string json = File.ReadAllText(pfad);
 
             using JsonDocument doc = JsonDocument.Parse(json);
 
@@ -25,13 +44,13 @@ namespace NotebookTools
                     cell.GetProperty("source")
                         .EnumerateArray()
                         .Select(x => x.GetString())
-                )       .Replace("\n", " ");
+                ).Replace("\n", " ");
 
-                if (typ == "code")          // Das die | gleichen abstand haben und gleich anfangen 
+                if (typ == "code")
                 {
                     Console.WriteLine($"{nummer} | code     | {inhalt}");
                 }
-                else 
+                else
                 {
                     Console.WriteLine($"{nummer} | markdown | {inhalt}");
                 }
