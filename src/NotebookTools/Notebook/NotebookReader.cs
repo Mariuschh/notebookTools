@@ -2,8 +2,12 @@
 
 namespace NotebookTools.Notebook;
 
+/// Liest eine Jupyter-Notebook-Datei ein und wandelt den JSON-Inhalt
+/// in ein Notebook-Objekt um.
 public class NotebookReader
 {
+    /// Liest eine .ipynb-Datei vom angegebenen Dateipfad ein.
+    /// Gibt ein Notebook-Objekt mit allen enthaltenen Zellen und Metadaten zurück.
     public static Notebook LoadNotebook(string filePath)
     {
         if (string.IsNullOrWhiteSpace(filePath))
