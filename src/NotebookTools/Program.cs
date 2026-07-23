@@ -8,10 +8,6 @@ namespace NotebookTools
     {
         static void Main(string[] args)
         {
-            string filePath = Path.GetFullPath(args[0]);
-            Notebook.Notebook notebook = NotebookReader.LoadNotebook(filePath);
-
-            CommandContent.Content(filePath, notebook);
             // Prüft, ob beim Programmstart ein Dateipfad übergeben wurde.
             if (args.Length == 0)
             {
@@ -20,7 +16,7 @@ namespace NotebookTools
             }
 
             // Wandelt den eingegebenen relativen Pfad in einen vollständigen Pfad um.
-            //string filePath = Path.GetFullPath(args[0]);
+            string filePath = Path.GetFullPath(args[0]);
 
             // Beendet das Programm, wenn die angegebene Datei nicht existiert.
             if (!File.Exists(filePath))
@@ -30,9 +26,7 @@ namespace NotebookTools
             }
 
             // Liest die Notebook-Datei ein und speichert sie als Notebook-Objekt.
-            //Notebook.Notebook notebook = NotebookReader.LoadNotebook(filePath);
-
-            //CommandContent.Content(filePath, notebook);
+            Notebook.Notebook notebook = NotebookReader.LoadNotebook(filePath);
         }
     }
 }
