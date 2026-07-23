@@ -1,38 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using NotebookTools.Notebook;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace NotebookTools.Features
 {
-    internal class CommandContent
+    public class CommandContent
     {
-        public static void Content (string filePath)
+        public static void Content (string filePath, Notebook.Notebook notebook)
         {
             int nummer = 1;
 
-            foreach (JsonElement cell in cells.EnumerateArray())
+            foreach (NotebookCell cell in notebook.Cells)    // Geht alle Zellen im Notebook durch
             {
-                string typ = cell.GetProperty("cell_type").GetString();
+                string type = cell.Type; // Typ der Zelle (code oder markdown)
 
-                string inhalt = string.Concat(
-                    cell.GetProperty("source")
-                        .EnumerateArray()
-                        .Select(x => x.GetString())
-                ).Replace("\n", " ");
+                string content = cell.Source.ToString(); // Inhalt der Zelle
 
-                if (typ == "code")
+                if (type == "code") // Ausgabe je nach Zelltyp
                 {
-                    Console.WriteLine($"{nummer} | code     | {inhalt}");
+                    Console.WriteLine($"{nummer} | code     | {content}");
                 }
                 else
                 {
-                    Console.WriteLine($"{nummer} | markdown | {inhalt}");
+                    Console.WriteLine($"{nummer} | markdown | {content}");
                 }
 
-                nummer++;
+                nummer++; // Nummer für die nächste Zelle erhöhen
+
             }
 
         }
