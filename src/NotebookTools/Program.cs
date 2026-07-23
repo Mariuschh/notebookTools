@@ -3,7 +3,7 @@ using NotebookTools.Notebook;
 
 namespace NotebookTools
 {
-    public class Program
+    class Program
     {
         static void Main(string[] args)
         {
