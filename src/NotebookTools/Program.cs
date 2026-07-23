@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using NotebookTools.Features;
+using NotebookTools.Help;
 using NotebookTools.Notebook;
 
 
@@ -30,10 +31,8 @@ namespace NotebookTools
             // Liest die Notebook-Datei ein und speichert sie als Notebook-Objekt.
             Notebook.Notebook notebook = NotebookReader.LoadNotebook(filePath);
 
-            //Test
-            int counter = 1;
-            CommandShow.ErmittleSourceText(counter, filePath); 
-
+            //Methode aufrufen als Test 
+            HelpCommand.GetHelpText();
         }
 
 
