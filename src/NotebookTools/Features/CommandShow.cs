@@ -27,35 +27,23 @@ namespace NotebookTools.Features
                 suchPosition = sourcePosition + "\"source\"".Length;
             }
 
-
-           
-
-            }
-        }
-
-
-        //New Class "Edit"
-
-        public static string ZelleBearbeiten (int counter, string notebook)
-            {
-            int zellNummer = 0;
-            int zellIndex = 0;
-            if (zellNummer > 0)
-            {
-                zellIndex = zellNummer - 1;
-            }
-
-            var cell = text.Cells[zellIndex];
-
-
-
-
-
-
-
-
             return "";
-            }
+        }
+        
+        //New Class "Edit"
+        // public static string ZelleBearbeiten (int counter, string notebook)
+        // {
+        //     int zellNummer = 0;
+        //     int zellIndex = 0;
+        //     if (zellNummer > 0)
+        //     {
+        //         zellIndex = zellNummer - 1;
+        //     }
+        //
+        //     var cell = text.Cells[zellIndex];
+        //     
+        //     return "";
+        // }
     }
 }
 
