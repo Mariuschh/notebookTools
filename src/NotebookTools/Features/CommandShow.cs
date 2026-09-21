@@ -14,6 +14,14 @@ namespace NotebookTools.Features
             int sourcePosition = -1;
             int suchPosition = 0;
 
+
+            
+            int klammerCounter = 0;             //neue vars
+            string textEinerSourceInstanz = "";
+            bool ersteKlammer = false;
+
+
+
             while (sourceCounter < counter)
             {
                 sourcePosition = text.IndexOf("\"source\"", suchPosition);
@@ -23,11 +31,49 @@ namespace NotebookTools.Features
                     return "";
                 }
 
+
+
+                
+                    for (int i = sourcePosition; i < text.Length; i++)                          //finde den text in source
+                    {
+                        char aktuellesZeichen = text[i];
+
+                        if (aktuellesZeichen == ']')
+                        {
+                            klammerCounter--;
+                            if (klammerCounter == 0)
+                            {
+                                break;
+                            }
+                        }
+
+                        if (ersteKlammer == true)
+                        {
+                            textEinerSourceInstanz += aktuellesZeichen;
+                        }
+
+                        if (aktuellesZeichen == '[')
+                        {
+                            ersteKlammer = true;
+                            klammerCounter++;
+                        }
+                        
+                    }
+               
+
+
+
+
+
+
                 sourceCounter++;
                 suchPosition = sourcePosition + "\"source\"".Length;
             }
 
-            return "";
+
+
+
+            return textEinerSourceInstanz;
         }
         
         //New Class "Edit"

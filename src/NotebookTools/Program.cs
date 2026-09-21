@@ -32,7 +32,8 @@ namespace NotebookTools
             Notebook.Notebook notebook = NotebookReader.LoadNotebook(filePath);
 
             //Methode aufrufen als Test 
-            HelpCommand.GetHelpText();
+            string helpText = HelpCommand.GetHelpText();   //Von Jonas zum testen
+            Console.WriteLine(helpText);
         }
 
 
