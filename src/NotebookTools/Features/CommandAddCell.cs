@@ -1,28 +1,31 @@
 ﻿using NotebookTools.Notebook;
-
 namespace NotebookTools.Features
 {
-    public class CommandAddCell
-    // was macht eine zelle und was brauche ich um eine zelle zu erstellen 
-    // typ mark code was steht drin source überschriften struktur anschauen notebook user asuwählen lassen inhalt titel
-    // die neue id darf nicht bereits existieren!
+    public class CommandAddCell // Fügt dem übergebenen Notebook eine neue Zelle hinzu.
     {
         public static Notebooks AddCell(Notebooks nb)
         {
-            Console.WriteLine("Zelltyp eingeben (code/markdown):");
+            Console.WriteLine("Zelltyp eingeben (code/markdown):"); // Zelltyp vom Benutzer abfragen.
             string? type = Console.ReadLine();
 
-            Console.WriteLine("Inhalt eingeben:");
+            while (type != "code" && type != "markdown") //   ob der eingegebene Zelltyp gültig ist.
+            {
+                Console.WriteLine("Ungültiger Zelltyp. Bitte 'code' oder 'markdown' eingeben:"); // Bei einer ungültigen Eingabe wird erneut nach dem Zelltyp gefragt.
+                type = Console.ReadLine();
+            }
+            
+            Console.WriteLine("Inhalt eingeben:"); // Inhalt der neuen Zelle vom Benutzer abfragen.
             string? text = Console.ReadLine();
 
-            NotebookCell cell = new NotebookCell();
+            NotebookCell cell = new() // Neue Zelle erstellen und den gewählten Zelltyp festlegen.
+            {Type = type};
+       
+            cell.Source.Add(text ?? "");  // Den eingegebenen Inhalt zur Zelle hinzufügen.
 
-            cell.Type = type ?? "code";
-            cell.Source.Add(text ?? "");
+            nb.Cells.Add(cell);// Die neue Zelle zum Notebook hinzufügen.
 
-            nb.Cells.Add(cell);
-
-            return nb;
+            return nb;  // Das neue  Notebook zurückgeben.
         }
     }
 }
+
