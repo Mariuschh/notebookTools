@@ -5,7 +5,7 @@ namespace NotebookTools.Notebook;
 /// Stellt ein vollständiges Jupyter Notebook dar.
 /// Das Objekt enthält die einzelnen Notebook-Zellen sowie allgemeine
 /// Informationen zum Notebook-Format.
-public class Notebook
+public class Notebooks
 {
     /// Enthält alle Zellen des Notebooks in ihrer ursprünglichen Reihenfolge.
     /// Über diese Liste können Code und Markdown Zellen verarbeitet werden.

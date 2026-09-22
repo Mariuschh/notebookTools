@@ -5,7 +5,7 @@ namespace NotebookTools.Features
 {
     public class CommandContent
     {
-        public static void Content (string filePath, Notebook.Notebook notebook)
+        public static void Content (string filePath, Notebook.Notebooks notebook)
         {
             int nummer = 1;
 
