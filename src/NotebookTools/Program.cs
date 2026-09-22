@@ -19,15 +19,7 @@ namespace NotebookTools
                 return;
             }
 
-            // Wandelt den eingegebenen relativen Pfad in einen vollständigen Pfad um.
-            string filePath = Path.GetFullPath(args[0]);
-
-            // Beendet das Programm, wenn die angegebene Datei nicht existiert.
-            if (!File.Exists(filePath))
-            {
-                Console.WriteLine($"Die Datei wurde nicht gefunden: {filePath}");
-                return;
-            }
+            return RunFileSearch.Run(args);
 
             // Liest die Notebook-Datei ein und speichert sie als Notebook-Objekt.
             Notebook.Notebook notebook = NotebookReader.LoadNotebook(filePath);
