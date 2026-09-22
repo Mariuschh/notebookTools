@@ -8,8 +8,9 @@ namespace NotebookTools.Features
 {
     public class CommandShow
     {
-        public static string ErmittleSourceText(int counter, string text)
+        public static string ErmittleSourceText(string sCounter, string text)
         {
+            int counter = Convert.ToInt32(sCounter);
             int sourceCounter = 0;
             int sourcePosition = -1;
             int suchPosition = 0;
@@ -59,12 +60,6 @@ namespace NotebookTools.Features
                         }
                         
                     }
-               
-
-
-
-
-
 
                 sourceCounter++;
                 suchPosition = sourcePosition + "\"source\"".Length;
