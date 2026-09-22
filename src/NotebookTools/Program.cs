@@ -42,7 +42,7 @@ namespace NotebookTools
                 switch (args[1].ToLower())
                 {
                     case "show":
-                        if(args.Length > 2)
+                        if(args.Length > 2 && int.TryParse(args[2], out int cellNumber) && cellNumber > 0)
                         {
                             string choosenSource = CommandShow.ErmittleSourceText(args[2], filePath);
                             Console.WriteLine(choosenSource);
@@ -50,7 +50,9 @@ namespace NotebookTools
                         }
                         else 
                         {
-                            Console.WriteLine(errorEingabe);
+                            if (args.Length < 2) {Console.WriteLine("Falsches Eingabe Format. Für mehr Infos siehe 'Help' command."); break; }            //Fehlerausgaben
+                            if(int.TryParse(args[2], out cellNumber) == false) { Console.WriteLine("Bitte gebe eine Zahl nach 'show' ein."); break;}
+                            if (cellNumber < 0) {Console.WriteLine("Bitte gebe eine Zahl die größer als 0 ist ein."); break;}
                             break;
                         }
 

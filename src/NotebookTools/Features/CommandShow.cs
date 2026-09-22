@@ -8,36 +8,35 @@ namespace NotebookTools.Features
 {
     public class CommandShow
     {
-        public static string ErmittleSourceText(string sCounter, string text)
+        public static string ErmittleSourceText(string sCounter, string filePath)
         {
-            int counter = Convert.ToInt32(sCounter);
             int sourceCounter = 0;
+            int klammerCounter = 0;
+            int counter = Convert.ToInt32(sCounter);
             int sourcePosition = -1;
             int suchPosition = 0;
-
-
-            
-            int klammerCounter = 0;             //neue vars
+            string notebookText = File.ReadAllText (filePath);
             string textEinerSourceInstanz = "";
             bool ersteKlammer = false;
+            string errorOutOfRange = "Die eingegebene Zahl war außerhalb des möglichen Bereichs.";
 
 
 
             while (sourceCounter < counter)
             {
-                sourcePosition = text.IndexOf("\"source\"", suchPosition);
-
+                sourcePosition = notebookText.IndexOf("\"source\"", suchPosition);
                 if (sourcePosition == -1)
                 {
                     return "";
                 }
+                sourceCounter++;
+                suchPosition = sourcePosition + "\"source\"".Length;
+            }
 
 
-
-                
-                    for (int i = sourcePosition; i < text.Length; i++)                          //finde den text in source
+            for (int i = sourcePosition; i < notebookText.Length; i++)                          //finde den text in source
                     {
-                        char aktuellesZeichen = text[i];
+                        char aktuellesZeichen = notebookText[i];
 
                         if (aktuellesZeichen == ']')
                         {
@@ -60,14 +59,7 @@ namespace NotebookTools.Features
                         }
                         
                     }
-
-                sourceCounter++;
-                suchPosition = sourcePosition + "\"source\"".Length;
-            }
-
-
-
-
+            //Console.WriteLine (textEinerSourceInstanz);
             return textEinerSourceInstanz;
         }
         
