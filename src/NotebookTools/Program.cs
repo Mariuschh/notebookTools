@@ -19,32 +19,41 @@ namespace NotebookTools
                 return;
             }
 
-            // Wandelt den eingegebenen relativen Pfad in einen vollständigen Pfad um.
-            string filePath = Path.GetFullPath(args[0]);
-
-            // Beendet das Programm, wenn die angegebene Datei nicht existiert.
-            if (!File.Exists(filePath))
+            string filePath = args[0];
+            if (args.Length == 1 || args[1].ToLower() != "merge")
             {
-                Console.WriteLine($"Die Datei wurde nicht gefunden: {filePath}");
+                int searchExitCode = RunFileSearch.Search(args, out filePath);
+                if (searchExitCode != 0)
+                {
+                    return;
+                }
+            }
+
+            if (args.Length == 1)
+            {
                 return;
             }
 
-            // Liest die Notebook-Datei ein und speichert sie als Notebook-Objekt.
-            Notebook.Notebook notebook = NotebookReader.LoadNotebook(filePath);
-
-
-
-
             // Methoden aufrufe
             string errorEingabe = "Problem bei der Eingabe.";
-            if (args.Length > 1)   
+            if (args.Length > 1)
             {
                 switch (args[1].ToLower())
                 {
+                    case "content":
+                        Notebook.Notebooks notebook = NotebookReader.LoadNotebook(filePath);
+                        CommandContent.Content(filePath, notebook);
+                        break;
+
+                    case "merge":
+                        CommandMerge.Merge(args);
+                        break;
+
                     case "show":
                         if(args.Length > 2 && int.TryParse(args[2], out int cellNumber) && cellNumber > 0)
                         {
-                            string choosenSource = CommandShow.ErmittleSourceText(args[2], filePath);
+                            string notebookText = File.ReadAllText(filePath);
+                            string choosenSource = CommandShow.ErmittleSourceText(args[2], notebookText);
                             Console.WriteLine(choosenSource);
                             break;
                         }
