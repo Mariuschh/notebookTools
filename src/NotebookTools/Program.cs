@@ -19,7 +19,18 @@ namespace NotebookTools
                 return;
             }
 
-            return RunFileSearch.Run(args);
+            string filePath;
+            int searchExitCode = RunFileSearch.Run(args, out filePath);
+            if (searchExitCode != 0)
+            {
+                Environment.ExitCode = searchExitCode;
+                return;
+            }
+
+            if (args.Length == 1)
+            {
+                return;
+            }
 
             // Liest die Notebook-Datei ein und speichert sie als Notebook-Objekt.
             Notebook.Notebook notebook = NotebookReader.LoadNotebook(filePath);
@@ -33,10 +44,15 @@ namespace NotebookTools
             {
                 switch (args[1].ToLower())
                 {
+                    case "content":
+                        CommandContent.Content(filePath, notebook);
+                        break;
+
                     case "show":
                         if(args.Length > 2)
                         {
-                            string choosenSource = CommandShow.ErmittleSourceText(args[2], filePath);
+                            string notebookText = File.ReadAllText(filePath);
+                            string choosenSource = CommandShow.ErmittleSourceText(args[2], notebookText);
                             Console.WriteLine(choosenSource);
                             break;
                         }

@@ -1,4 +1,5 @@
-﻿using System.Data.OleDb;
+using System.Data.OleDb;
+using System.Runtime.InteropServices;
 using NotebookTools.Help;
 
 namespace NotebookTools.Features;
@@ -7,7 +8,14 @@ public class RunFileSearch
 {
     public static int Run(string[] args)
     {
-        if (args.Length != 1)
+        return Run(args, out _);
+    }
+
+    public static int Run(string[] args, out string filePath)
+    {
+        filePath = "";
+
+        if (args.Length == 0)
         {
             Console.Error.WriteLine(
                 "Verwendung: notebookTools <Dateiname>");
@@ -18,18 +26,43 @@ public class RunFileSearch
 
         try
         {
+            string? localPath = PathHelper.GetLocalPath(userInput);
+
+            if (localPath != null)
+            {
+                filePath = localPath;
+                Console.WriteLine($"Notebook gefunden: {filePath}");
+                return 0;
+            }
+
+            string fileName = Path.GetFileName(
+                PathHelper.NormalizeInput(userInput));
+
             IReadOnlyList<string> results =
-                FileHelper.FindByFileName(userInput);
+                FileHelper.FindByFileName(fileName);
 
-            return HandleResults(userInput, results);
+            if (results.Count == 1)
+            {
+                filePath = results[0];
+            }
+
+            return HandleResults(results);
         }
-        catch (OleDbException exception)
+        catch (OleDbException)
         {
-            Console.Error.WriteLine(
-                "Windows Search konnte nicht verwendet werden.");
-
-            Console.Error.WriteLine(exception.Message);
-            return 2;
+            return ShowSearchError();
+        }
+        catch (InvalidOperationException)
+        {
+            return ShowSearchError();
+        }
+        catch (NotSupportedException)
+        {
+            return ShowSearchError();
+        }
+        catch (COMException)
+        {
+            return ShowSearchError();
         }
         catch (ArgumentException exception)
         {
@@ -38,21 +71,20 @@ public class RunFileSearch
         }
     }
 
+    private static int ShowSearchError()
+    {
+        Console.Error.WriteLine(
+            "Windows Search ist nicht verfügbar. Navigiere zum Verzeichnis des Notebooks oder übergib den vollständigen Pfad.");
+        return 2;
+    }
+
     private static int HandleResults(
-        string userInput,
         IReadOnlyList<string> results)
     {
         if (results.Count == 0)
         {
-            string fileName =
-                PathHelper.NormalizeInput(userInput);
-
             Console.Error.WriteLine(
-                $"Notebook „{fileName}“ wurde nicht gefunden.");
-
-            Console.Error.WriteLine(
-                "Navigiere zum Verzeichnis des Notebooks " +
-                "oder übergib den vollständigen Pfad.");
+                "Notebook nicht gefunden. Navigiere zum Verzeichnis des Notebooks oder übergib den vollständigen Pfad.");
 
             return 1;
         }
@@ -62,7 +94,6 @@ public class RunFileSearch
             Console.WriteLine(
                 $"Notebook gefunden: {results[0]}");
 
-            // Später wird hier das Notebook verarbeitet.
             return 0;
         }
 
