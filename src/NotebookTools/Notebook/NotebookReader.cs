@@ -8,7 +8,7 @@ public class NotebookReader
 {
     /// Liest eine .ipynb-Datei vom angegebenen Dateipfad ein.
     /// Gibt ein Notebook-Objekt mit allen enthaltenen Zellen und Metadaten zurück.
-    public static Notebook LoadNotebook(string filePath)
+    public static Notebooks LoadNotebook(string filePath)
     {
         if (string.IsNullOrWhiteSpace(filePath))
         {
@@ -26,8 +26,8 @@ public class NotebookReader
 
         string jsonString = File.ReadAllText(filePath);
 
-        Notebook? notebook =
-            JsonSerializer.Deserialize<Notebook>(jsonString);
+        Notebooks? notebook =
+            JsonSerializer.Deserialize<Notebooks>(jsonString);
 
         if (notebook is null)
         {

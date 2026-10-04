@@ -33,7 +33,7 @@ namespace NotebookTools
             }
 
             // Liest die Notebook-Datei ein und speichert sie als Notebook-Objekt.
-            Notebook.Notebook notebook = NotebookReader.LoadNotebook(filePath);
+            Notebook.Notebooks notebook = NotebookReader.LoadNotebook(filePath);
 
 
 
