@@ -12,7 +12,7 @@ namespace NotebookTools.Features
             if (args.Length < 6 || args.Length % 2 != 0)
             {
                 Console.Error.WriteLine("Verwendung: notebookTools <Zieldatei> merge <Notebook1> <Zellen> <Notebook2> <Zellen> ...");
-                Console.Error.WriteLine("Beispiel: notebookTools zusammen.ipynb merge erstes.ipynb 1,3 zweites.ipynb 2");
+                Console.Error.WriteLine("Beispiel: notebookTools zusammen merge erstes 1,3 zweites 2");
                 return 1;
             }
 

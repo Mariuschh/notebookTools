@@ -22,7 +22,7 @@ namespace NotebookTools.Features
 
             ZelleLoeschen(zellNummer, notebook);
             CommandContent.Content(filePath, notebook);
-            Console.WriteLine("Das Notebook wurde nur im Arbeitsspeicher geändert. Die Datei wurde nicht gespeichert.");
+            CommandSave.Save(notebook, filePath);
         }
 
         public static Notebooks ZelleLoeschen(int zellNummer, Notebooks notebook)

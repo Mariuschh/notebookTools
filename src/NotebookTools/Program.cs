@@ -12,10 +12,10 @@ namespace NotebookTools
         static void Main(string[] args)
         {
 
-            // Prüft, ob beim Programmstart ein Dateipfad übergeben wurde.
-            if (args.Length == 0)
+            // Ohne Argumente oder bei help direkt die Hilfe anzeigen.
+            if (args.Length == 0 || args[0].ToLower() == "help")
             {
-                Console.WriteLine("Bitte gib eine Notebook-Datei an.");
+                Console.WriteLine(HelpCommand.GetHelpText());
                 return;
             }
 
@@ -75,7 +75,7 @@ namespace NotebookTools
                             break;
                         }
                         CommandContent.Content(filePath, addNotebook);
-                        Console.WriteLine("Das Notebook wurde nur im Arbeitsspeicher geändert. Die Datei wurde nicht gespeichert.");
+                        CommandSave.Save(addNotebook, filePath);
                         break;
 
                     case "show":

@@ -59,7 +59,7 @@ namespace NotebookTools.Features
 
             ZelleBearbeiten(zellNummer, notebook, neuerInhalt);
             CommandContent.Content(filePath, notebook);
-            Console.WriteLine("Das Notebook wurde nur im Arbeitsspeicher geändert. Die Datei wurde nicht gespeichert.");
+            CommandSave.Save(notebook, filePath);
         }
 
         public static Notebooks ZelleBearbeiten(int zellNummer, Notebooks notebook, string neuerInhalt)

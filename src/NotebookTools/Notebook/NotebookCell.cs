@@ -33,5 +33,9 @@ public class NotebookCell
     /// oder wenn es sich nicht um eine Code-Zelle handelt.
     [JsonPropertyName("execution_count")]
     public int? ExecutionCount { get; set; }
+
+    // Zum Beispiel Zell-IDs und eingebettete Bilder behalten.
+    [JsonExtensionData]
+    public Dictionary<string, System.Text.Json.JsonElement> AdditionalData { get; set; } = new();
     
 }

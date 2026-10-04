@@ -24,4 +24,8 @@ public class Notebooks
     /// Unterversion des verwendeten Jupyter-Notebook-Formats.
     [JsonPropertyName("nbformat_minor")]
     public int MinorFormat { get; set; }
+
+    // Weitere Angaben behalten, damit sie beim Speichern nicht verloren gehen.
+    [JsonExtensionData]
+    public Dictionary<string, System.Text.Json.JsonElement> AdditionalData { get; set; } = new();
 }
