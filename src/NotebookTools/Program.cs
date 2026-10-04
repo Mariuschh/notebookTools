@@ -19,12 +19,14 @@ namespace NotebookTools
                 return;
             }
 
-            string filePath;
-            int searchExitCode = RunFileSearch.Run(args, out filePath);
-            if (searchExitCode != 0)
+            string filePath = args[0];
+            if (args.Length == 1 || args[1].ToLower() != "merge")
             {
-                Environment.ExitCode = searchExitCode;
-                return;
+                int searchExitCode = RunFileSearch.Search(args, out filePath);
+                if (searchExitCode != 0)
+                {
+                    return;
+                }
             }
 
             if (args.Length == 1)
@@ -32,20 +34,19 @@ namespace NotebookTools
                 return;
             }
 
-            // Liest die Notebook-Datei ein und speichert sie als Notebook-Objekt.
-            Notebook.Notebooks notebook = NotebookReader.LoadNotebook(filePath);
-
-
-
-
             // Methoden aufrufe
             string errorEingabe = "Problem bei der Eingabe.";
-            if (args.Length > 1)   
+            if (args.Length > 1)
             {
                 switch (args[1].ToLower())
                 {
                     case "content":
+                        Notebook.Notebooks notebook = NotebookReader.LoadNotebook(filePath);
                         CommandContent.Content(filePath, notebook);
+                        break;
+
+                    case "merge":
+                        CommandMerge.Merge(args);
                         break;
 
                     case "show":

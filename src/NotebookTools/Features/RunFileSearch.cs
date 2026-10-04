@@ -6,12 +6,12 @@ namespace NotebookTools.Features;
 
 public class RunFileSearch
 {
-    public static int Run(string[] args)
+    public static int Search(string[] args)
     {
-        return Run(args, out _);
+        return Search(args, out _);
     }
 
-    public static int Run(string[] args, out string filePath)
+    public static int Search(string[] args, out string filePath)
     {
         filePath = "";
 
