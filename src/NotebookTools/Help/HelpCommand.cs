@@ -23,6 +23,19 @@ namespace NotebookTools.Help
                Gib nach jedem Notebook die gewünschten Zellnummern mit Kommas getrennt an.
                Die Nummerierung beginnt bei 1. Die Zellen werden in der angegebenen Reihenfolge übernommen.
                Die Zieldatei darf noch nicht existieren.
+
+               Zellen bearbeiten, löschen oder verschieben:
+                 notebookTools beispiel.ipynb edit 2
+                 notebookTools beispiel.ipynb delete 2
+                 notebookTools beispiel.ipynb move 2 4
+                 notebookTools beispiel.ipynb add
+               Bei add wählst du den Zelltyp im Terminal und schreibst den Inhalt im Editor.
+               Speichere und schließe die temporäre Datei und bestätige mit Enter. Die Zelle wird am Ende angefügt.
+               Bei edit öffnet sich eine temporäre Notebook-Datei mit der ausgewählten Zelle.
+               Speichere und schließe sie im Editor und bestätige danach mit Enter im Terminal.
+               Nur der Zellinhalt wird übernommen. Die temporäre Datei muss genau eine Zelle enthalten.
+               Bei move ist die letzte Zahl die neue Position der Zelle. Zellnummern beginnen bei 1.
+               Die Änderungen werden angezeigt, aber noch nicht gespeichert und gehen beim Beenden verloren.
                """;
         }
         public static string GetHelpText() //Methode ertsellen help,aufruf der helptext 

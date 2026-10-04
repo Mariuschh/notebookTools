@@ -49,6 +49,35 @@ namespace NotebookTools
                         CommandMerge.Merge(args);
                         break;
 
+                    case "edit":
+                        CommandEdit.Edit(args, filePath);
+                        break;
+
+                    case "delete":
+                        CommandDelete.Delete(args, filePath);
+                        break;
+
+                    case "move":
+                        CommandMove.Move(args, filePath);
+                        break;
+
+                    case "add":
+                        if (args.Length != 2)
+                        {
+                            Console.WriteLine("Verwendung: notebookTools <Datei> add");
+                            break;
+                        }
+                        Notebooks addNotebook = NotebookReader.LoadNotebook(filePath);
+                        int bisherigeZellAnzahl = addNotebook.Cells.Count;
+                        CommandAddCell.AddCell(addNotebook);
+                        if (addNotebook.Cells.Count == bisherigeZellAnzahl)
+                        {
+                            break;
+                        }
+                        CommandContent.Content(filePath, addNotebook);
+                        Console.WriteLine("Das Notebook wurde nur im Arbeitsspeicher geändert. Die Datei wurde nicht gespeichert.");
+                        break;
+
                     case "show":
                         if(args.Length > 2 && int.TryParse(args[2], out int cellNumber) && cellNumber > 0)
                         {

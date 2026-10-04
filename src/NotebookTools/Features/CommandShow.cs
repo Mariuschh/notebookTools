@@ -62,21 +62,6 @@ namespace NotebookTools.Features
             //Console.WriteLine (textEinerSourceInstanz);
             return textEinerSourceInstanz;
         }
-        
-        //New Class "Edit"
-        // public static string ZelleBearbeiten (int counter, string notebook)
-        // {
-        //     int zellNummer = 0;
-        //     int zellIndex = 0;
-        //     if (zellNummer > 0)
-        //     {
-        //         zellIndex = zellNummer - 1;
-        //     }
-        //
-        //     var cell = text.Cells[zellIndex];
-        //     
-        //     return "";
-        // }
     }
 }
 
