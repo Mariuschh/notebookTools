@@ -34,31 +34,31 @@ namespace NotebookTools.Features
             }
 
 
-            for (int i = sourcePosition; i < notebookText.Length; i++)                          //finde den text in source
+            for (int i = sourcePosition; i < notebookText.Length; i++)   //finde den text in source
+            {
+                char aktuellesZeichen = notebookText[i];
+
+                if (aktuellesZeichen == ']')
+                {
+                    klammerCounter--;
+                    if (klammerCounter == 0)
                     {
-                        char aktuellesZeichen = notebookText[i];
-
-                        if (aktuellesZeichen == ']')
-                        {
-                            klammerCounter--;
-                            if (klammerCounter == 0)
-                            {
                                 break;
-                            }
-                        }
-
-                        if (ersteKlammer == true)
-                        {
-                            textEinerSourceInstanz += aktuellesZeichen;
-                        }
-
-                        if (aktuellesZeichen == '[')
-                        {
-                            ersteKlammer = true;
-                            klammerCounter++;
-                        }
-                        
                     }
+                }
+
+                if (ersteKlammer == true)
+                {
+                    textEinerSourceInstanz += aktuellesZeichen;
+                }
+
+                if (aktuellesZeichen == '[')
+                {
+                    ersteKlammer = true;
+                    klammerCounter++;
+                }
+                        
+            }
             //Console.WriteLine (textEinerSourceInstanz);
             return textEinerSourceInstanz;
         }
