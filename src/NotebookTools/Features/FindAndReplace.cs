@@ -12,8 +12,8 @@ namespace NotebookTools.Features
 
              
             Console.Write("Ersetzen durch: "); string replaceText = Console.ReadLine() ?? ""; //  durch den der Suchtext ersetzt werden soll
+            Console.ForegroundColor = ConsoleColor.Green;
 
-             
             if (string.IsNullOrEmpty(searchText))
             {
                 Console.WriteLine("Kein Suchtext angegeben."); // Abbrechen, wenn kein Suchtext eingegeben wurde

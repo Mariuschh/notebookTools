@@ -9,7 +9,7 @@ namespace NotebookTools
 {
     class Program
     {
-        static void Main(string[] args, object commandFindAndReplace)
+        static void Main(string[] args)
         {
 
             // Ohne Argumente oder bei help direkt die Hilfe anzeigen.
@@ -18,7 +18,7 @@ namespace NotebookTools
                 Console.WriteLine(HelpCommand.GetHelpText());
                 return;
             }
-
+            
             string filePath = args[0];
             if (args.Length == 1 || args[1].ToLower() != "merge")
             {
@@ -109,9 +109,9 @@ namespace NotebookTools
                         Console.WriteLine(helpText);
                         break;
 
-                    case "FindAndReplace":
+                    case "findandreplace":
                         Notebooks findNotebook = NotebookReader.LoadNotebook(filePath);
-                        FindAndReplace.FindAndReplaces( findNotebook, filePath);
+                        FindAndReplace.FindAndReplaces(findNotebook, filePath);
                         break;
                 }
             }
