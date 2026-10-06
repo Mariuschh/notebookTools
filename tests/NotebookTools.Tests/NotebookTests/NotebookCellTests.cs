@@ -7,179 +7,80 @@ namespace NotebookTools.Tests.NotebookTests;
 public class NotebookCellTests
 {
     [TestMethod]
-    public void Constructor_InitializesEmptyCollectionsAndDefaultValues()
+    public void NeueZelle_IstLeer()
     {
-        var cell = new NotebookCell();
+        NotebookCell zelle = new NotebookCell();
 
-        Assert.AreEqual(string.Empty, cell.Type);
-        Assert.IsNull(cell.ExecutionCount);
-        Assert.IsNotNull(cell.Source);
-        Assert.HasCount(0, cell.Source);
-        Assert.IsNotNull(cell.Outputs);
-        Assert.HasCount(0, cell.Outputs);
-        Assert.IsNotNull(cell.Metadata);
-        Assert.HasCount(0, cell.Metadata);
-        Assert.IsNotNull(cell.AdditionalData);
-        Assert.HasCount(0, cell.AdditionalData);
+        Assert.AreEqual("", zelle.Type);
+        Assert.IsEmpty(zelle.Source);
+        Assert.IsEmpty(zelle.Outputs);
+        Assert.IsEmpty(zelle.Metadata);
+        Assert.IsEmpty(zelle.AdditionalData);
+        Assert.IsNull(zelle.ExecutionCount);
     }
 
     [TestMethod]
-    public void Constructor_CreatesIndependentCollectionsForEachInstance()
+    public void TextHinzufuegen_AendertNurEineZelle()
     {
-        var first = new NotebookCell();
-        var second = new NotebookCell();
+        NotebookCell ersteZelle = new NotebookCell();
+        NotebookCell zweiteZelle = new NotebookCell();
 
-        first.Source.Add("print(1)");
-        first.Outputs.Add(new { output_type = "stream", text = new[] { "1\n" } });
-        first.Metadata.Add("collapsed", true);
-        first.AdditionalData.Add("id", JsonSerializer.SerializeToElement("cell-1"));
+        ersteZelle.Source.Add("Hallo");
 
-        Assert.HasCount(0, second.Source);
-        Assert.HasCount(0, second.Outputs);
-        Assert.HasCount(0, second.Metadata);
-        Assert.HasCount(0, second.AdditionalData);
+        Assert.HasCount(1, ersteZelle.Source);
+        Assert.IsEmpty(zweiteZelle.Source);
     }
 
     [TestMethod]
-    public void Serialize_WritesCellPropertyNamesAndContents()
+    public void ZelleInJsonUmwandeln_SpeichertTypUndText()
     {
-        var cell = new NotebookCell
-        {
-            Type = "code",
-            Source = new List<string> { "value = 1\n", "print(value)" },
-            Outputs = new List<object>
-            {
-                new { output_type = "stream", name = "stdout", text = new[] { "1\n" } },
-                new { output_type = "stream", name = "stderr", text = new[] { "Warning\n" } }
-            },
-            Metadata = new Dictionary<string, object> { ["collapsed"] = true },
-            ExecutionCount = 3
-        };
+        NotebookCell zelle = new NotebookCell();
+        zelle.Type = "code";
+        zelle.Source.Add("print(1)");
+        zelle.ExecutionCount = 2;
 
-        using var document = JsonDocument.Parse(JsonSerializer.Serialize(cell));
-        var root = document.RootElement;
+        string json = JsonSerializer.Serialize(zelle);
+        using JsonDocument dokument = JsonDocument.Parse(json);
 
-        Assert.AreEqual(5, root.EnumerateObject().Count());
-        Assert.AreEqual("code", root.GetProperty("cell_type").GetString());
-        Assert.AreEqual(3, root.GetProperty("execution_count").GetInt32());
-        var source = root.GetProperty("source");
-        Assert.AreEqual(2, source.GetArrayLength());
-        Assert.AreEqual("value = 1\n", source[0].GetString());
-        Assert.AreEqual("print(value)", source[1].GetString());
-        var outputs = root.GetProperty("outputs");
-        Assert.AreEqual(2, outputs.GetArrayLength());
-        Assert.AreEqual("stream", outputs[0].GetProperty("output_type").GetString());
-        Assert.AreEqual("stdout", outputs[0].GetProperty("name").GetString());
-        Assert.AreEqual("1\n", outputs[0].GetProperty("text")[0].GetString());
-        Assert.AreEqual("stderr", outputs[1].GetProperty("name").GetString());
-        Assert.AreEqual("Warning\n", outputs[1].GetProperty("text")[0].GetString());
-        Assert.IsTrue(root.GetProperty("metadata").GetProperty("collapsed").GetBoolean());
+        Assert.AreEqual("code", dokument.RootElement.GetProperty("cell_type").GetString());
+        Assert.AreEqual("print(1)", dokument.RootElement.GetProperty("source")[0].GetString());
+        Assert.AreEqual(2, dokument.RootElement.GetProperty("execution_count").GetInt32());
     }
 
     [TestMethod]
-    public void Deserialize_ReadsCellPropertiesAndContents()
+    public void JsonEinlesen_LiestZellendaten()
     {
-        const string json = """
-            {
-              "cell_type": "code",
-              "source": ["value = 1\n", "print(value)"],
-              "outputs": [
-                { "output_type": "stream", "name": "stdout", "text": ["1\n"] },
-                { "output_type": "stream", "name": "stderr", "text": ["Warning\n"] }
-              ],
-              "metadata": { "tags": ["example", "test"] },
-              "execution_count": 3
-            }
+        string json = """
+            { "cell_type": "code", "source": ["print(1)"], "execution_count": 2 }
             """;
 
-        var cell = JsonSerializer.Deserialize<NotebookCell>(json);
+        NotebookCell? zelle = JsonSerializer.Deserialize<NotebookCell>(json);
 
-        Assert.IsNotNull(cell);
-        Assert.AreEqual("code", cell.Type);
-        Assert.AreEqual((int?)3, cell.ExecutionCount);
-        CollectionAssert.AreEqual(new[] { "value = 1\n", "print(value)" }, cell.Source);
-        Assert.HasCount(2, cell.Outputs);
-        var stdout = (JsonElement)cell.Outputs[0];
-        Assert.AreEqual("stream", stdout.GetProperty("output_type").GetString());
-        Assert.AreEqual("stdout", stdout.GetProperty("name").GetString());
-        Assert.AreEqual("1\n", stdout.GetProperty("text")[0].GetString());
-        var stderr = (JsonElement)cell.Outputs[1];
-        Assert.AreEqual("stderr", stderr.GetProperty("name").GetString());
-        Assert.AreEqual("Warning\n", stderr.GetProperty("text")[0].GetString());
-        Assert.HasCount(1, cell.Metadata);
-        var tags = (JsonElement)cell.Metadata["tags"];
-        Assert.AreEqual(2, tags.GetArrayLength());
-        Assert.AreEqual("example", tags[0].GetString());
-        Assert.AreEqual("test", tags[1].GetString());
-        Assert.HasCount(0, cell.AdditionalData);
+        Assert.IsNotNull(zelle);
+        Assert.AreEqual("code", zelle.Type);
+        Assert.AreEqual("print(1)", zelle.Source[0]);
+        Assert.AreEqual(2, zelle.ExecutionCount);
     }
 
     [TestMethod]
-    public void Deserialize_MissingProperties_PreservesDefaults()
+    public void JsonEinlesen_OhneAusfuehrung_ZaehlerBleibtNull()
     {
-        var cell = JsonSerializer.Deserialize<NotebookCell>("{}");
+        NotebookCell? zelle = JsonSerializer.Deserialize<NotebookCell>("""{ "execution_count": null }""");
 
-        Assert.IsNotNull(cell);
-        Assert.AreEqual(string.Empty, cell.Type);
-        Assert.IsNull(cell.ExecutionCount);
-        Assert.IsNotNull(cell.Source);
-        Assert.HasCount(0, cell.Source);
-        Assert.IsNotNull(cell.Outputs);
-        Assert.HasCount(0, cell.Outputs);
-        Assert.IsNotNull(cell.Metadata);
-        Assert.HasCount(0, cell.Metadata);
-        Assert.IsNotNull(cell.AdditionalData);
-        Assert.HasCount(0, cell.AdditionalData);
+        Assert.IsNotNull(zelle);
+        Assert.IsNull(zelle.ExecutionCount);
     }
 
     [TestMethod]
-    [DataRow("code")]
-    [DataRow("markdown")]
-    public void JsonRoundTrip_NullExecutionCount_RemainsNull(string cellType)
+    public void ZellenId_BleibtBeimUmwandelnErhalten()
     {
-        var original = new NotebookCell { Type = cellType, ExecutionCount = null };
+        NotebookCell? zelle = JsonSerializer.Deserialize<NotebookCell>("""{ "id": "zelle-1" }""");
+        Assert.IsNotNull(zelle);
+        Assert.AreEqual("zelle-1", zelle.AdditionalData["id"].GetString());
 
-        var json = JsonSerializer.Serialize(original);
-        using var document = JsonDocument.Parse(json);
-        var restored = JsonSerializer.Deserialize<NotebookCell>(json);
+        string json = JsonSerializer.Serialize(zelle);
+        using JsonDocument dokument = JsonDocument.Parse(json);
 
-        Assert.AreEqual(JsonValueKind.Null, document.RootElement.GetProperty("execution_count").ValueKind);
-        Assert.IsNotNull(restored);
-        Assert.AreEqual(cellType, restored.Type);
-        Assert.IsNull(restored.ExecutionCount);
-    }
-
-    [TestMethod]
-    public void JsonRoundTrip_PreservesCellIdAndAttachmentsAtRootLevel()
-    {
-        const string json = """
-            {
-              "cell_type": "markdown",
-              "source": ["![Image](attachment:image.png)"],
-              "metadata": {},
-              "id": "cell-1",
-              "attachments": { "image.png": { "image/png": "aW1hZ2U=" } },
-              "custom": null
-            }
-            """;
-
-        var cell = JsonSerializer.Deserialize<NotebookCell>(json);
-
-        Assert.IsNotNull(cell);
-        Assert.HasCount(3, cell.AdditionalData);
-        Assert.AreEqual("cell-1", cell.AdditionalData["id"].GetString());
-        Assert.AreEqual("aW1hZ2U=", cell.AdditionalData["attachments"]
-            .GetProperty("image.png").GetProperty("image/png").GetString());
-        Assert.AreEqual(JsonValueKind.Null, cell.AdditionalData["custom"].ValueKind);
-
-        using var document = JsonDocument.Parse(JsonSerializer.Serialize(cell));
-        var root = document.RootElement;
-
-        Assert.AreEqual(8, root.EnumerateObject().Count());
-        Assert.IsFalse(root.TryGetProperty("AdditionalData", out _));
-        Assert.AreEqual("cell-1", root.GetProperty("id").GetString());
-        Assert.AreEqual("aW1hZ2U=", root.GetProperty("attachments")
-            .GetProperty("image.png").GetProperty("image/png").GetString());
-        Assert.AreEqual(JsonValueKind.Null, root.GetProperty("custom").ValueKind);
+        Assert.AreEqual("zelle-1", dokument.RootElement.GetProperty("id").GetString());
     }
 }

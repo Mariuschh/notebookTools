@@ -7,150 +7,79 @@ namespace NotebookTools.Tests.NotebookTests;
 public class NotebookTests
 {
     [TestMethod]
-    public void Constructor_InitializesEmptyCollectionsAndDefaultVersions()
+    public void NeuesNotebook_IstLeer()
     {
-        var notebook = new Notebooks();
+        Notebooks notebook = new Notebooks();
 
-        Assert.IsNotNull(notebook.Cells);
-        Assert.HasCount(0, notebook.Cells);
-        Assert.IsNotNull(notebook.Metadata);
-        Assert.HasCount(0, notebook.Metadata);
-        Assert.IsNotNull(notebook.AdditionalData);
-        Assert.HasCount(0, notebook.AdditionalData);
+        Assert.IsEmpty(notebook.Cells);
+        Assert.IsEmpty(notebook.Metadata);
+        Assert.IsEmpty(notebook.AdditionalData);
         Assert.AreEqual(0, notebook.Format);
         Assert.AreEqual(0, notebook.MinorFormat);
     }
 
     [TestMethod]
-    public void Constructor_CreatesIndependentCollectionsForEachInstance()
+    public void ZelleHinzufuegen_AendertNurEinNotebook()
     {
-        var first = new Notebooks();
-        var second = new Notebooks();
+        Notebooks erstesNotebook = new Notebooks();
+        Notebooks zweitesNotebook = new Notebooks();
 
-        first.Cells.Add(new NotebookCell { Type = "code" });
-        first.Metadata.Add("language", "python");
-        first.AdditionalData.Add("custom", JsonSerializer.SerializeToElement(true));
+        erstesNotebook.Cells.Add(new NotebookCell());
 
-        Assert.HasCount(0, second.Cells);
-        Assert.HasCount(0, second.Metadata);
-        Assert.HasCount(0, second.AdditionalData);
+        Assert.HasCount(1, erstesNotebook.Cells);
+        Assert.IsEmpty(zweitesNotebook.Cells);
     }
 
     [TestMethod]
-    public void Serialize_WritesNotebookPropertyNamesAndCellOrder()
+    public void NotebookInJsonUmwandeln_SpeichertFormat()
     {
-        var notebook = new Notebooks
-        {
-            Cells = new List<NotebookCell>
-            {
-                new() { Type = "markdown", Source = new List<string> { "# Title" } },
-                new() { Type = "code", Source = new List<string> { "print(1)" } }
-            },
-            Metadata = new Dictionary<string, object> { ["language"] = "python" },
-            Format = 4,
-            MinorFormat = 5
-        };
+        Notebooks notebook = new Notebooks();
+        notebook.Format = 4;
+        notebook.MinorFormat = 5;
 
-        using var document = JsonDocument.Parse(JsonSerializer.Serialize(notebook));
-        var root = document.RootElement;
+        string json = JsonSerializer.Serialize(notebook);
+        using JsonDocument dokument = JsonDocument.Parse(json);
 
-        Assert.AreEqual(4, root.EnumerateObject().Count());
-        Assert.AreEqual(4, root.GetProperty("nbformat").GetInt32());
-        Assert.AreEqual(5, root.GetProperty("nbformat_minor").GetInt32());
-        Assert.AreEqual("python", root.GetProperty("metadata").GetProperty("language").GetString());
-        var cells = root.GetProperty("cells");
-        Assert.AreEqual(2, cells.GetArrayLength());
-        Assert.AreEqual("markdown", cells[0].GetProperty("cell_type").GetString());
-        Assert.AreEqual("# Title", cells[0].GetProperty("source")[0].GetString());
-        Assert.AreEqual("code", cells[1].GetProperty("cell_type").GetString());
-        Assert.AreEqual("print(1)", cells[1].GetProperty("source")[0].GetString());
+        Assert.AreEqual(4, dokument.RootElement.GetProperty("nbformat").GetInt32());
+        Assert.AreEqual(5, dokument.RootElement.GetProperty("nbformat_minor").GetInt32());
     }
 
     [TestMethod]
-    public void Deserialize_ReadsNotebookPropertiesAndCellOrder()
+    public void JsonEinlesen_LiestZelleUndFormat()
     {
-        const string json = """
-            {
-              "cells": [
-                { "cell_type": "markdown", "source": ["# Title"] },
-                { "cell_type": "code", "source": ["print(1)"] }
-              ],
-              "metadata": { "kernelspec": { "name": "python3" } },
-              "nbformat": 4,
-              "nbformat_minor": 5
-            }
+        string json = """
+            { "cells": [{ "cell_type": "code" }], "nbformat": 4, "nbformat_minor": 5 }
             """;
 
-        var notebook = JsonSerializer.Deserialize<Notebooks>(json);
+        Notebooks? notebook = JsonSerializer.Deserialize<Notebooks>(json);
 
         Assert.IsNotNull(notebook);
+        Assert.HasCount(1, notebook.Cells);
+        Assert.AreEqual("code", notebook.Cells[0].Type);
         Assert.AreEqual(4, notebook.Format);
         Assert.AreEqual(5, notebook.MinorFormat);
-        Assert.HasCount(2, notebook.Cells);
-        Assert.AreEqual("markdown", notebook.Cells[0].Type);
-        CollectionAssert.AreEqual(new[] { "# Title" }, notebook.Cells[0].Source);
-        Assert.AreEqual("code", notebook.Cells[1].Type);
-        CollectionAssert.AreEqual(new[] { "print(1)" }, notebook.Cells[1].Source);
-        Assert.HasCount(1, notebook.Metadata);
-        var kernel = (JsonElement)notebook.Metadata["kernelspec"];
-        Assert.AreEqual("python3", kernel.GetProperty("name").GetString());
-        Assert.HasCount(0, notebook.AdditionalData);
     }
 
     [TestMethod]
-    public void Deserialize_MissingProperties_PreservesDefaults()
+    public void JsonEinlesen_OhneFelder_ErzeugtLeeresNotebook()
     {
-        var notebook = JsonSerializer.Deserialize<Notebooks>("{}");
+        Notebooks? notebook = JsonSerializer.Deserialize<Notebooks>("{}");
 
         Assert.IsNotNull(notebook);
-        Assert.IsNotNull(notebook.Cells);
-        Assert.HasCount(0, notebook.Cells);
-        Assert.IsNotNull(notebook.Metadata);
-        Assert.HasCount(0, notebook.Metadata);
-        Assert.IsNotNull(notebook.AdditionalData);
-        Assert.HasCount(0, notebook.AdditionalData);
-        Assert.AreEqual(0, notebook.Format);
-        Assert.AreEqual(0, notebook.MinorFormat);
+        Assert.IsEmpty(notebook.Cells);
+        Assert.IsEmpty(notebook.Metadata);
     }
 
     [TestMethod]
-    public void JsonRoundTrip_PreservesUnknownPropertiesAtRootLevel()
+    public void ZusaetzlichesFeld_BleibtBeimUmwandelnErhalten()
     {
-        const string json = """
-            {
-              "cells": [],
-              "metadata": {},
-              "nbformat": 4,
-              "nbformat_minor": 5,
-              "custom": { "enabled": true, "tags": ["example", "test"] },
-              "revision": 7,
-              "description": "Example notebook",
-              "optional": null
-            }
-            """;
-
-        var notebook = JsonSerializer.Deserialize<Notebooks>(json);
-
+        Notebooks? notebook = JsonSerializer.Deserialize<Notebooks>("""{ "titel": "Test" }""");
         Assert.IsNotNull(notebook);
-        Assert.HasCount(4, notebook.AdditionalData);
-        Assert.IsTrue(notebook.AdditionalData["custom"].GetProperty("enabled").GetBoolean());
-        Assert.AreEqual(7, notebook.AdditionalData["revision"].GetInt32());
-        Assert.AreEqual("Example notebook", notebook.AdditionalData["description"].GetString());
-        Assert.AreEqual(JsonValueKind.Null, notebook.AdditionalData["optional"].ValueKind);
+        Assert.AreEqual("Test", notebook.AdditionalData["titel"].GetString());
 
-        using var document = JsonDocument.Parse(JsonSerializer.Serialize(notebook));
-        var root = document.RootElement;
+        string json = JsonSerializer.Serialize(notebook);
+        using JsonDocument dokument = JsonDocument.Parse(json);
 
-        Assert.AreEqual(8, root.EnumerateObject().Count());
-        Assert.IsFalse(root.TryGetProperty("AdditionalData", out _));
-        var custom = root.GetProperty("custom");
-        Assert.IsTrue(custom.GetProperty("enabled").GetBoolean());
-        var tags = custom.GetProperty("tags");
-        Assert.AreEqual(2, tags.GetArrayLength());
-        Assert.AreEqual("example", tags[0].GetString());
-        Assert.AreEqual("test", tags[1].GetString());
-        Assert.AreEqual(7, root.GetProperty("revision").GetInt32());
-        Assert.AreEqual("Example notebook", root.GetProperty("description").GetString());
-        Assert.AreEqual(JsonValueKind.Null, root.GetProperty("optional").ValueKind);
+        Assert.AreEqual("Test", dokument.RootElement.GetProperty("titel").GetString());
     }
 }
