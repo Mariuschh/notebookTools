@@ -9,7 +9,7 @@ namespace NotebookTools
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main(string[] args, object commandFindAndReplace)
         {
 
             // Ohne Argumente oder bei help direkt die Hilfe anzeigen.
@@ -108,7 +108,11 @@ namespace NotebookTools
                         string helpText = HelpCommand.GetHelpText();
                         Console.WriteLine(helpText);
                         break;
-                        
+
+                    case "FindAndReplace":
+                        Notebooks findNotebook = NotebookReader.LoadNotebook(filePath);
+                        FindAndReplace.FindAndReplaces( findNotebook, filePath);
+                        break;
                 }
             }
             else
