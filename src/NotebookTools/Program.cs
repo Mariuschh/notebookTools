@@ -79,20 +79,30 @@ namespace NotebookTools
                         break;
 
                     case "show":
-                        if(args.Length > 2 && int.TryParse(args[2], out int cellNumber) && cellNumber > 0)
+                        if (args.Length != 3)
                         {
-                            string notebookText = File.ReadAllText(filePath);
-                            string choosenSource = CommandShow.ErmittleSourceText(args[2], notebookText);
-                            Console.WriteLine(choosenSource);
+                            Console.WriteLine(
+                                "Verwendung: NotebookTools <Datei> show <Zellennummer>");
                             break;
                         }
-                        else 
+
+                        if (!int.TryParse(args[2], out int cellNumber))
                         {
-                            if (args.Length < 2) {Console.WriteLine("Falsches Eingabe Format. Für mehr Infos siehe 'Help' command."); break; }            //Fehlerausgaben
-                            if(int.TryParse(args[2], out cellNumber) == false) { Console.WriteLine("Bitte gebe eine Zahl nach 'show' ein."); break;}
-                            if (cellNumber < 0) {Console.WriteLine("Bitte gebe eine Zahl die größer als 0 ist ein."); break;}
+                            Console.WriteLine("Bitte gib eine Zahl nach 'show' ein.");
                             break;
                         }
+
+                        if (cellNumber <= 0)
+                        {
+                            Console.WriteLine("Bitte gib eine Zahl größer als 0 ein.");
+                            break;
+                        }
+
+                        string choosenSource =
+                            CommandShow.ErmittleSourceText(args[2], filePath);
+
+                        Console.WriteLine(choosenSource);
+                        break;
 
                     case "help":
                         string helpText = HelpCommand.GetHelpText();
