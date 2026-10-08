@@ -13,7 +13,7 @@ namespace NotebookTools
         {
 
             // Ohne Argumente oder bei help direkt die Hilfe anzeigen.
-            if (args.Length == 0 || args[0].ToLower() == "help")
+            if (args.Length == 0 || args[0].ToLower() == "help" || args[0].ToLower() == "--help")
             {
                 Console.WriteLine(HelpCommand.GetHelpText());
                 return;
@@ -61,15 +61,36 @@ namespace NotebookTools
                         CommandMove.Move(args, filePath);
                         break;
 
+                    case "type":
+                        CommandType.Type(args, filePath);
+                        break;
+
+                    case "split":
+                        CommandSplit.Split(args, filePath);
+                        break;
+
+                    case "join":
+                        CommandJoin.Join(args, filePath);
+                        break;
+
+                    case "export":
+                        CommandExport.Export(args, filePath);
+                        break;
+
                     case "add":
-                        if (args.Length != 2)
+                        if (args.Length != 2 && args.Length != 3)
                         {
-                            Console.WriteLine("Verwendung: notebookTools <Datei> add");
+                            Console.WriteLine("Verwendung: notebookTools <Datei> add [Textdatei]");
                             break;
                         }
                         Notebooks addNotebook = NotebookReader.LoadNotebook(filePath);
                         int bisherigeZellAnzahl = addNotebook.Cells.Count;
-                        CommandAddCell.AddCell(addNotebook);
+                        string? textFile = null;
+                        if (args.Length == 3)
+                        {
+                            textFile = args[2];
+                        }
+                        CommandAddCell.AddCell(addNotebook, textFile);
                         if (addNotebook.Cells.Count == bisherigeZellAnzahl)
                         {
                             break;
@@ -105,6 +126,7 @@ namespace NotebookTools
                         break;
 
                     case "help":
+                    case "--help":
                         string helpText = HelpCommand.GetHelpText();
                         Console.WriteLine(helpText);
                         break;
@@ -112,6 +134,10 @@ namespace NotebookTools
                     case "findandreplace":
                         Notebooks findNotebook = NotebookReader.LoadNotebook(filePath);
                         FindAndReplace.FindAndReplaces(findNotebook, filePath);
+                        break;
+
+                    default:
+                        Console.WriteLine("Unbekannter Befehl: " + args[1] + ". Mit 'notebookTools help' siehst du die verfügbaren Befehle.");
                         break;
                 }
             }

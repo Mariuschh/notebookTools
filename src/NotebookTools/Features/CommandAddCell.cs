@@ -3,7 +3,7 @@ namespace NotebookTools.Features
 {
     public class CommandAddCell // Fügt dem übergebenen Notebook eine neue Zelle hinzu.
     {
-        public static Notebooks AddCell(Notebooks nb)
+        public static Notebooks AddCell(Notebooks nb, string? textFile = null)
         {
             Console.WriteLine("Zelltyp eingeben (code/markdown):"); // Zelltyp vom Benutzer abfragen.
             string? type = Console.ReadLine();
@@ -26,7 +26,14 @@ namespace NotebookTools.Features
             string? text;
             try
             {
-                text = CellEditor.OpenNewCell(nb, type);
+                if (textFile == null)
+                {
+                    text = CellEditor.OpenNewCell(nb, type);
+                }
+                else
+                {
+                    text = File.ReadAllText(textFile);
+                }
             }
             catch (System.ComponentModel.Win32Exception)
             {

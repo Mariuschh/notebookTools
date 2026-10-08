@@ -27,17 +27,28 @@ namespace NotebookTools.Help
                  content             Kurze Übersicht aller Zellen anzeigen
                  show <Zelle>        Inhalt einer Zelle anzeigen
                  edit <Zelle>        Zellinhalt im Editor bearbeiten
-                 add                 Neue Zelle am Ende hinzufügen
+                 add [Textdatei]     Neue Zelle im Editor oder aus einer Datei hinzufügen
+                 export <Format>     Zellinhalte als txt, html oder docx exportieren
                  delete <Zelle>      Zelle löschen
                  move <Zelle> <Ziel> Zelle an die Zielposition verschieben
+                 type <Zelle> <Typ>  Zelltyp auf code oder markdown ändern
+                 split <Zelle> <Zeile> Zelle nach der angegebenen Textzeile aufteilen
+                 join <Auswahl>      Zellen gleichen Typs zusammenführen
                  findandreplace      Text in allen Zellen suchen und ersetzen
                  help                Diese Hilfe anzeigen
+                 --help              Diese Hilfe anzeigen
 
                Beispiele:
                ----------------------------------------------------------------------
                  notebookTools beispiel content
                  notebookTools beispiel edit 2
                  notebookTools beispiel move 2 4
+                 notebookTools beispiel type 2 markdown
+                 notebookTools beispiel split 2 5
+                 notebookTools beispiel join 1,3,5
+                 notebookTools beispiel join code
+                 notebookTools beispiel add "aufgabe.txt"
+                 notebookTools beispiel export html
                  notebookTools beispiel findandreplace
 
                  Bei findandreplace gibst du Suchtext und Ersatz im Terminal ein.
@@ -51,6 +62,23 @@ namespace NotebookTools.Help
                  Zellnummern mit Kommas trennen. Die angegebene Reihenfolge bleibt erhalten.
                  Die Zieldatei darf noch nicht existieren.
 
+               Exportieren:
+               ----------------------------------------------------------------------
+                 notebookTools <Datei> export <txt/html/docx> [Zieldatei]
+                 notebookTools beispiel export docx "C:\Notebooks\ausgabe.docx"
+                 Ohne Zieldatei wird neben dem Notebook mit dem gleichen Namen exportiert.
+                 Exportiert werden Zellinhalte, keine gespeicherten Ausgaben oder Bilder.
+                 Markdown bleibt als Text erhalten. Für DOCX muss Word nicht installiert sein.
+                 Vorhandene Dateien werden nicht überschrieben.
+
+               Zellen aufteilen und zusammenführen:
+               ----------------------------------------------------------------------
+                 split teilt nach einer Textzeile. Beide Zellen behalten den Zelltyp.
+                 join nimmt Zellnummern mit Kommas oder alle Zellen von code oder markdown.
+                 Die Notebook-Reihenfolge bleibt erhalten; die erste ausgewählte Zelle bleibt stehen.
+                 Ihr Zelltyp und ihre Metadaten werden übernommen, alte Code-Ausgaben entfernt.
+                 Anschließend speicherst du wie gewohnt in eine neue Notebook-Datei.
+
                Bearbeiten im Editor:
                ----------------------------------------------------------------------
                  edit und add öffnen eine temporäre Datei mit genau einer Zelle.
@@ -60,7 +88,7 @@ namespace NotebookTools.Help
 
                Änderungen speichern:
                ----------------------------------------------------------------------
-                 Nach edit, add, delete, move und findandreplace wirst du nach der Zieldatei gefragt.
+                 Nach Änderungen wirst du nach der Zieldatei gefragt.
                  Enter: als <Dateiname>_bearbeitet.ipynb neben dem Original speichern.
                  Eigener Dateipfad: an einem anderen Ort oder unter anderem Namen speichern.
                  Die Endung .ipynb wird auch beim Speichern automatisch ergänzt.

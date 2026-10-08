@@ -496,3 +496,10 @@ FodyWeavers.xsd
 # Additional files built by Visual Studio
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudio,visualstudiocode,rider
+
+# Fertige Anwendung für die Projektabgabe ins Repository aufnehmen.
+!/release/
+/release/*
+!/release/win-x64/
+/release/win-x64/*
+!/release/win-x64/NotebookTools.exe

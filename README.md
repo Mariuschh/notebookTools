@@ -4,12 +4,20 @@ Ein C#-Kommandozeilentool zum Anzeigen und Bearbeiten von Jupyter Notebooks im `
 
 ## Voraussetzungen und Start
 
-- Windows und das .NET 9 SDK zum Bauen und Ausführen des Quellcodes
+- Windows x64 für die fertige EXE. Zum Bauen des Quellcodes wird das .NET 9 SDK benötigt.
 - Für `edit` und `add`: ein Editor, der `.ipynb`-Dateien öffnen und speichern kann, beispielsweise Visual Studio Code mit der Jupyter-Erweiterung. Diesen in Windows als Standard-App für `.ipynb` auswählen.
 - Für die Suche außerhalb des aktuellen Ordners: Windows Search und ein indizierter Speicherort
 
 
-Für den Aufruf als `notebookTools` den Ordner mit der gebauten Anwendung, zum Beispiel `src\NotebookTools\bin\Debug\net9.0`, zur Benutzer-Umgebungsvariable `Path` hinzufügen und anschließend ein neues Terminal öffnen. Die übrigen Dateien im Ausgabeordner werden ebenfalls benötigt. Eine fertige EXE für die Abgabe wird zum Projektabschluss bereitgestellt.
+Für die fertige Anwendung ist der Pfad `release/win-x64/NotebookTools.exe` vorgesehen. Mit dem unten angegebenen Build-Befehl enthält sie die .NET-Laufzeit und kann als einzelne Datei kopiert werden.
+
+Für den Aufruf aus jedem Terminal die EXE in einen festen Ordner kopieren und diesen Ordner zur Benutzer-Umgebungsvariable `Path` hinzufügen: In Windows nach „Umgebungsvariablen“ suchen, die Benutzer-Variable `Path` bearbeiten und den Ordner als neuen Eintrag hinzufügen. Anschließend ein neues Terminal öffnen und `notebookTools --help` aufrufen.
+
+Direkt aus dem Repository:
+
+```powershell
+.\release\win-x64\NotebookTools.exe --help
+```
 
 ## Verwendung
 
@@ -24,18 +32,46 @@ Die Endung `.ipynb` wird automatisch ergänzt. Du kannst einen Dateinamen, einen
 | `content` | Kurze Übersicht aller Zellen | `notebookTools beispiel content` |
 | `show <Zelle>` | Vollständigen Inhalt einer Zelle anzeigen | `notebookTools beispiel show 2` |
 | `edit <Zelle>` | Zellinhalt im Editor bearbeiten | `notebookTools beispiel edit 2` |
-| `add` | Neue Code- oder Markdown-Zelle am Ende einfügen | `notebookTools beispiel add` |
+| `add [Textdatei]` | Neue Zelle im Editor oder aus einer Textdatei einfügen | `notebookTools beispiel add` |
 | `delete <Zelle>` | Zelle löschen | `notebookTools beispiel delete 2` |
 | `move <Zelle> <Ziel>` | Zelle an die angegebene Position verschieben | `notebookTools beispiel move 2 4` |
+| `split <Zelle> <Zeile>` | Zelle nach einer Textzeile aufteilen | `notebookTools beispiel split 2 5` |
+| `join <Auswahl>` | Ausgewählte Zellen oder alle Zellen eines Typs zusammenführen | `notebookTools beispiel join markdown` |
+| `type <Zelle> <Typ>` | Zelltyp auf code oder markdown ändern | `notebookTools beispiel type 2 markdown` |
+| `export <Format> [Zieldatei]` | Zellinhalte als TXT, HTML oder DOCX exportieren | `notebookTools beispiel export html` |
 | `findandreplace` | Text in allen Zellen suchen und ersetzen | `notebookTools beispiel findandreplace` |
 
-`notebookTools help` oder `notebookTools` ohne Argumente zeigt die Hilfe an. Befehle können auch mit Großbuchstaben geschrieben werden.
+`notebookTools help`, `notebookTools --help` oder `notebookTools` ohne Argumente zeigt die Hilfe an. Befehle können auch mit Großbuchstaben geschrieben werden.
 
 ### Bearbeiten und Einfügen
 
-`edit` und `add` öffnen eine temporäre Notebook-Datei mit genau einer Zelle. Bei `add` wählst du vorher im Terminal den Zelltyp aus. Bearbeite den Zellinhalt im Editor, speichere die Datei und schließe sie. Drücke danach im Terminal Enter, damit der Inhalt übernommen wird. Mit `abbrechen` kannst du den Vorgang beenden.
+`edit` und `add` ohne Textdatei öffnen eine temporäre Notebook-Datei mit genau einer Zelle. Bei `add` wählst du vorher im Terminal den Zelltyp aus. Bearbeite den Zellinhalt im Editor, speichere die Datei und schließe sie. Drücke danach im Terminal Enter, damit der Inhalt übernommen wird. Mit `abbrechen` kannst du den Vorgang beenden.
 
 Es wird nur der Inhalt übernommen. Die temporäre Datei dient nicht zum Löschen oder Verschieben von Zellen und nicht zum Ändern des Zelltyps.
+
+Mit `notebookTools beispiel add "aufgabe.txt"` wird der Inhalt der Textdatei direkt als neue Zelle am Ende eingefügt. Den Zelltyp wählst du im Terminal. Anschließend folgt die gewohnte Speicherabfrage.
+
+Mit `type` lässt sich der Typ einer vorhandenen Zelle ändern. Der Zellinhalt bleibt erhalten; alte Code-Ausgaben und der Ausführungszähler werden zurückgesetzt.
+
+### Exportieren
+
+```text
+notebookTools beispiel export txt
+notebookTools beispiel export html
+notebookTools beispiel export docx "C:\Notebooks\ausgabe.docx"
+```
+
+Ohne Zieldatei wird neben dem Notebook mit dem gleichen Dateinamen und der gewählten Endung gespeichert. Eine fehlende Export-Endung wird bei einem eigenen Ziel ergänzt. Vorhandene Dateien werden nicht überschrieben.
+
+Exportiert werden die Zellinhalte in ihrer Reihenfolge. Markdown bleibt als Text erhalten; gespeicherte Ausgaben und Bilder werden nicht exportiert. Für DOCX muss Word nicht installiert sein.
+
+### Zellen aufteilen und zusammenführen
+
+`notebookTools beispiel split 2 5` teilt Zelle 2 nach ihrer fünften Textzeile. Die zweite Zelle wird direkt dahinter eingefügt. Beide behalten den Zelltyp; nach der Trennstelle muss noch Text folgen.
+
+`notebookTools beispiel join 1,3,5` verbindet die gewählten Zellen in ihrer Notebook-Reihenfolge. Sie dürfen an beliebigen Positionen stehen, müssen aber den gleichen Zelltyp haben. `join code` oder `join markdown` verbindet alle Zellen dieses Typs. Mindestens zwei Zellen sind nötig.
+
+Die zusammengeführte Zelle steht an der Position der ersten ausgewählten Zelle und übernimmt deren Metadaten. Die übrigen ausgewählten Zellen werden entfernt. Falls nötig, wird ein Zeilenumbruch zwischen den Inhalten eingefügt. Alte Code-Ausgaben werden zurückgesetzt. Anschließend folgt die Speicherabfrage für eine neue Notebook-Datei.
 
 ### Suchen und Ersetzen
 
@@ -85,3 +121,9 @@ Die Aufgabenverwaltung erfolgt im SCRUM Board in GitHub Projects. Der Backlog im
 ## Verwendete Hilfsmittel
 
 Zur Verarbeitung der Notebook-Dateien wird `System.Text.Json` verwendet. Windows Search wird über `System.Data.OleDb` angesprochen. Bei der Umsetzung, Fehlerkorrektur, Erstellung von Tests und Überarbeitung der Dokumentation wurde ChatGPT/Codex unterstützend eingesetzt.
+
+## EXE neu erstellen
+
+```powershell
+dotnet publish src/NotebookTools/NotebookTools.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o release/win-x64
+```
