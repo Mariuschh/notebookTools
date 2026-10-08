@@ -8,15 +8,12 @@ Ein C#-Kommandozeilentool zum Anzeigen und Bearbeiten von Jupyter Notebooks im `
 - Für `edit` und `add`: ein Editor, der `.ipynb`-Dateien öffnen und speichern kann, beispielsweise Visual Studio Code mit der Jupyter-Erweiterung. Diesen in Windows als Standard-App für `.ipynb` auswählen.
 - Für die Suche außerhalb des aktuellen Ordners: Windows Search und ein indizierter Speicherort
 
-
-Für die fertige Anwendung ist der Pfad `release/win-x64/NotebookTools.exe` vorgesehen. Mit dem unten angegebenen Build-Befehl enthält sie die .NET-Laufzeit und kann als einzelne Datei kopiert werden.
-
 Für den Aufruf aus jedem Terminal die EXE in einen festen Ordner kopieren und diesen Ordner zur Benutzer-Umgebungsvariable `Path` hinzufügen: In Windows nach „Umgebungsvariablen“ suchen, die Benutzer-Variable `Path` bearbeiten und den Ordner als neuen Eintrag hinzufügen. Anschließend ein neues Terminal öffnen und `notebookTools --help` aufrufen.
 
-Direkt aus dem Repository:
+Die EXE liegt in diesem Pfad:
 
 ```powershell
-.\release\win-x64\NotebookTools.exe --help
+.\release\win-x64\NotebookTools.exe
 ```
 
 ## Verwendung
@@ -120,7 +117,7 @@ Die Aufgabenverwaltung erfolgt im SCRUM Board in GitHub Projects. Der Backlog im
 
 ## Verwendete Hilfsmittel
 
-Zur Verarbeitung der Notebook-Dateien wird `System.Text.Json` verwendet. Windows Search wird über `System.Data.OleDb` angesprochen. Bei der Umsetzung, Fehlerkorrektur, Erstellung von Tests und Überarbeitung der Dokumentation wurde ChatGPT/Codex unterstützend eingesetzt.
+Zur Verarbeitung der Notebook-Dateien wird `System.Text.Json` verwendet. Windows Search wird über `System.Data.OleDb` angesprochen. Bei der Umsetzung, Fehlerkorrektur, Erstellung von Tests und Überarbeitung der Dokumentation wurde ChatGPT unterstützend eingesetzt.
 
 ## EXE neu erstellen
 

@@ -1,0 +1,3 @@
+# Importierte Aufgabe
+Dieser Text wird mit add direkt aus einer Datei als neue Zelle eingefügt.
+Die ursprüngliche Textdatei bleibt erhalten.
