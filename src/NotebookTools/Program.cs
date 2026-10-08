@@ -18,7 +18,7 @@ namespace NotebookTools
                 Console.WriteLine(HelpCommand.GetHelpText());
                 return;
             }
-
+            
             string filePath = args[0];
             if (args.Length == 1 || args[1].ToLower() != "merge")
             {
@@ -108,7 +108,11 @@ namespace NotebookTools
                         string helpText = HelpCommand.GetHelpText();
                         Console.WriteLine(helpText);
                         break;
-                        
+
+                    case "findandreplace":
+                        Notebooks findNotebook = NotebookReader.LoadNotebook(filePath);
+                        FindAndReplace.FindAndReplaces(findNotebook, filePath);
+                        break;
                 }
             }
             else
