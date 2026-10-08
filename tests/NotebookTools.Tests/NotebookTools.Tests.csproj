@@ -8,6 +8,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="TestData\example.ipynb" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="TestData\example.ipynb">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MSTest" Version="4.0.1" />
   </ItemGroup>
 
