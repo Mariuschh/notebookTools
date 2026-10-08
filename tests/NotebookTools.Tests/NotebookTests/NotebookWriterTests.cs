@@ -73,7 +73,9 @@ public class NotebookWriterTests
 
         JsonObject? gespeichert = JsonNode.Parse(File.ReadAllText(dateiPfad)) as JsonObject;
         Assert.IsNotNull(gespeichert);
-        JsonObject? gespeicherteZelle = gespeichert["cells"]?[0] as JsonObject;
+        JsonArray? zellen = gespeichert["cells"] as JsonArray;
+        Assert.IsNotNull(zellen);
+        JsonObject? gespeicherteZelle = zellen[0] as JsonObject;
         Assert.IsNotNull(gespeicherteZelle);
         Assert.IsFalse(gespeicherteZelle.ContainsKey("outputs"));
         Assert.IsFalse(gespeicherteZelle.ContainsKey("execution_count"));
@@ -151,7 +153,13 @@ public class NotebookWriterTests
         File.WriteAllText(dateiPfad, "Alter Inhalt");
         Notebooks notebook = new Notebooks();
 
-        Assert.Throws<IOException>(() => NotebookWriter.SaveNotebook(dateiPfad, notebook));
+        Assert.Throws<IOException>(() =>
+
+        {
+
+            NotebookWriter.SaveNotebook(dateiPfad, notebook);
+
+        });
 
         Assert.AreEqual("Alter Inhalt", File.ReadAllText(dateiPfad));
     }

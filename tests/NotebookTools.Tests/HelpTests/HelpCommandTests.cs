@@ -6,79 +6,41 @@ namespace NotebookTools.Tests.HelpTests;
 public class HelpCommandTests
 {
     [TestMethod]
-    public void GetText_GibtHilfetextZurueck()
+    public void GetText_EnthaeltVerwendungUndBefehle()
     {
         string text = HelpCommand.GetText();
 
-        Assert.IsFalse(string.IsNullOrWhiteSpace(text));
+        StringAssert.Contains(text, "notebookTools <Datei> <Befehl> [Argumente]");
+        StringAssert.Contains(text, "content");
+        StringAssert.Contains(text, "show <Zelle>");
+        StringAssert.Contains(text, "edit <Zelle>");
+        StringAssert.Contains(text, "add");
+        StringAssert.Contains(text, "delete <Zelle>");
+        StringAssert.Contains(text, "move <Zelle> <Ziel>");
+        StringAssert.Contains(text, "help");
     }
 
     [TestMethod]
-    public void GetText_EnthaeltVerwendung()
+    public void GetText_EnthaeltBeispieleUndWichtigeHinweise()
     {
         string text = HelpCommand.GetText();
 
-        Assert.Contains("notebookTools <Datei> <Befehl> [Argumente]", text);
-    }
-
-    [TestMethod]
-    public void GetText_EnthaeltBefehle()
-    {
-        string text = HelpCommand.GetText();
-
-        Assert.Contains("content", text);
-        Assert.Contains("show <Zelle>", text);
-        Assert.Contains("edit <Zelle>", text);
-        Assert.Contains("add", text);
-        Assert.Contains("delete <Zelle>", text);
-        Assert.Contains("move <Zelle> <Ziel>", text);
-        Assert.Contains("help", text);
-    }
-
-    [TestMethod]
-    public void GetText_EnthaeltBeispiele()
-    {
-        string text = HelpCommand.GetText();
-
-        Assert.Contains("notebookTools beispiel content", text);
-        Assert.Contains("notebookTools beispiel edit 2", text);
-        Assert.Contains("notebookTools beispiel move 2 4", text);
-    }
-
-    [TestMethod]
-    public void GetText_ErklaertZusammenfuehren()
-    {
-        string text = HelpCommand.GetText();
-
-        Assert.Contains("notebookTools zusammen merge erstes 1,3 zweites 2", text);
-        Assert.Contains("Die Zieldatei darf noch nicht existieren.", text);
-    }
-
-    [TestMethod]
-    public void GetText_ErklaertSpeichernUndAbbrechen()
-    {
-        string text = HelpCommand.GetText();
-
-        Assert.Contains("<Dateiname>_bearbeitet.ipynb", text);
-        Assert.Contains("'abbrechen': Änderungen verwerfen.", text);
-        Assert.Contains("Vorhandene Dateien werden nicht überschrieben.", text);
-    }
-
-    [TestMethod]
-    public void GetText_EnthaeltHinweisZuZellnummern()
-    {
-        string text = HelpCommand.GetText();
-
-        Assert.Contains("Zellnummern und Zielpositionen beginnen bei 1.", text);
+        StringAssert.Contains(text, "notebookTools beispiel content");
+        StringAssert.Contains(text, "notebookTools beispiel edit 2");
+        StringAssert.Contains(text, "notebookTools beispiel move 2 4");
+        StringAssert.Contains(text, "notebookTools zusammen merge erstes 1,3 zweites 2");
+        StringAssert.Contains(text, "Die Zieldatei darf noch nicht existieren.");
+        StringAssert.Contains(text, "<Dateiname>_bearbeitet.ipynb");
+        StringAssert.Contains(text, "'abbrechen': Änderungen verwerfen.");
+        StringAssert.Contains(text, "Vorhandene Dateien werden nicht überschrieben.");
+        StringAssert.Contains(text, "Zellnummern und Zielpositionen beginnen bei 1.");
     }
 
     [TestMethod]
     public void GetHelpText_GibtGleichenTextWieGetTextZurueck()
     {
         string erwartet = HelpCommand.GetText();
-
         string ergebnis = HelpCommand.GetHelpText();
-
         Assert.AreEqual(erwartet, ergebnis);
     }
 }

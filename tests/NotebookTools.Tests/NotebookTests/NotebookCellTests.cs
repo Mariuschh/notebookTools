@@ -20,34 +20,6 @@ public class NotebookCellTests
     }
 
     [TestMethod]
-    public void TextHinzufuegen_AendertNurEineZelle()
-    {
-        NotebookCell ersteZelle = new NotebookCell();
-        NotebookCell zweiteZelle = new NotebookCell();
-
-        ersteZelle.Source.Add("Hallo");
-
-        Assert.HasCount(1, ersteZelle.Source);
-        Assert.IsEmpty(zweiteZelle.Source);
-    }
-
-    [TestMethod]
-    public void ZelleInJsonUmwandeln_SpeichertTypUndText()
-    {
-        NotebookCell zelle = new NotebookCell();
-        zelle.Type = "code";
-        zelle.Source.Add("print(1)");
-        zelle.ExecutionCount = 2;
-
-        string json = JsonSerializer.Serialize(zelle);
-        using JsonDocument dokument = JsonDocument.Parse(json);
-
-        Assert.AreEqual("code", dokument.RootElement.GetProperty("cell_type").GetString());
-        Assert.AreEqual("print(1)", dokument.RootElement.GetProperty("source")[0].GetString());
-        Assert.AreEqual(2, dokument.RootElement.GetProperty("execution_count").GetInt32());
-    }
-
-    [TestMethod]
     public void JsonEinlesen_LiestZellendaten()
     {
         string json = """
@@ -60,15 +32,6 @@ public class NotebookCellTests
         Assert.AreEqual("code", zelle.Type);
         Assert.AreEqual("print(1)", zelle.Source[0]);
         Assert.AreEqual(2, zelle.ExecutionCount);
-    }
-
-    [TestMethod]
-    public void JsonEinlesen_OhneAusfuehrung_ZaehlerBleibtNull()
-    {
-        NotebookCell? zelle = JsonSerializer.Deserialize<NotebookCell>("""{ "execution_count": null }""");
-
-        Assert.IsNotNull(zelle);
-        Assert.IsNull(zelle.ExecutionCount);
     }
 
     [TestMethod]

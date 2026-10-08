@@ -151,7 +151,13 @@ public class NotebookMergerTests
         List<List<int>> zellnummern = new List<List<int>>();
         zellnummern.Add(new List<int> { 0 });
 
-        Assert.ThrowsExactly<ArgumentException>(() => NotebookMerger.Merge(dateien, zellnummern));
+        Assert.ThrowsExactly<ArgumentException>(() =>
+
+        {
+
+            NotebookMerger.Merge(dateien, zellnummern);
+
+        });
     }
 
     [TestMethod]
@@ -162,7 +168,13 @@ public class NotebookMergerTests
         List<List<int>> zellnummern = new List<List<int>>();
         zellnummern.Add(new List<int> { 2 });
 
-        Assert.ThrowsExactly<ArgumentException>(() => NotebookMerger.Merge(dateien, zellnummern));
+        Assert.ThrowsExactly<ArgumentException>(() =>
+
+        {
+
+            NotebookMerger.Merge(dateien, zellnummern);
+
+        });
     }
 
     [TestMethod]
@@ -173,7 +185,13 @@ public class NotebookMergerTests
         List<List<int>> zellnummern = new List<List<int>>();
         zellnummern.Add(new List<int>());
 
-        Assert.ThrowsExactly<ArgumentException>(() => NotebookMerger.Merge(dateien, zellnummern));
+        Assert.ThrowsExactly<ArgumentException>(() =>
+
+        {
+
+            NotebookMerger.Merge(dateien, zellnummern);
+
+        });
     }
 
     [TestMethod]
@@ -184,7 +202,13 @@ public class NotebookMergerTests
         List<List<int>> zellnummern = new List<List<int>>();
         zellnummern.Add(new List<int>());
 
-        Assert.ThrowsExactly<ArgumentException>(() => NotebookMerger.Merge(dateien, zellnummern));
+        Assert.ThrowsExactly<ArgumentException>(() =>
+
+        {
+
+            NotebookMerger.Merge(dateien, zellnummern);
+
+        });
     }
 
     [TestMethod]
@@ -195,7 +219,13 @@ public class NotebookMergerTests
         List<List<int>> zellnummern = new List<List<int>>();
         zellnummern.Add(new List<int>());
 
-        Assert.ThrowsExactly<FileNotFoundException>(() => NotebookMerger.Merge(dateien, zellnummern));
+        Assert.ThrowsExactly<FileNotFoundException>(() =>
+
+        {
+
+            NotebookMerger.Merge(dateien, zellnummern);
+
+        });
     }
 
     [TestMethod]
@@ -206,6 +236,12 @@ public class NotebookMergerTests
         List<List<int>> zellnummern = new List<List<int>>();
         zellnummern.Add(new List<int>());
 
-        Assert.Throws<JsonException>(() => NotebookMerger.Merge(dateien, zellnummern));
+        Assert.Throws<JsonException>(() =>
+
+        {
+
+            NotebookMerger.Merge(dateien, zellnummern);
+
+        });
     }
 }

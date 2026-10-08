@@ -57,13 +57,19 @@ public class PathHelperTests
     [TestMethod]
     public void NormalizeInput_LeererText_WirftFehler()
     {
-        Assert.ThrowsExactly<ArgumentException>(() => PathHelper.NormalizeInput(""));
+        Assert.ThrowsExactly<ArgumentException>(() =>
+        {
+            PathHelper.NormalizeInput("");
+        });
     }
 
     [TestMethod]
     public void NormalizeInput_NurLeerzeichen_WirftFehler()
     {
-        Assert.ThrowsExactly<ArgumentException>(() => PathHelper.NormalizeInput("   "));
+        Assert.ThrowsExactly<ArgumentException>(() =>
+        {
+            PathHelper.NormalizeInput("   ");
+        });
     }
 
     [TestMethod]
@@ -109,6 +115,9 @@ public class PathHelperTests
     [TestMethod]
     public void GetLocalPath_LeererText_WirftFehler()
     {
-        Assert.ThrowsExactly<ArgumentException>(() => PathHelper.GetLocalPath(""));
+        Assert.ThrowsExactly<ArgumentException>(() =>
+        {
+            PathHelper.GetLocalPath("");
+        });
     }
 }

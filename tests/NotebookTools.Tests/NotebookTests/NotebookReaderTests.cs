@@ -53,7 +53,10 @@ public class NotebookReaderTests
     public void LoadNotebook_LeererPfad_WirftFehler()
     {
         // Der Aufruf hinter () => wird von Assert ausgeführt und auf den Fehler geprüft.
-        Assert.ThrowsExactly<ArgumentException>(() => NotebookReader.LoadNotebook(""));
+        Assert.ThrowsExactly<ArgumentException>(() =>
+        {
+            NotebookReader.LoadNotebook("");
+        });
     }
 
     [TestMethod]
@@ -61,7 +64,13 @@ public class NotebookReaderTests
     {
         File.Delete(dateiPfad);
 
-        Assert.ThrowsExactly<FileNotFoundException>(() => NotebookReader.LoadNotebook(dateiPfad));
+        Assert.ThrowsExactly<FileNotFoundException>(() =>
+
+        {
+
+            NotebookReader.LoadNotebook(dateiPfad);
+
+        });
     }
 
     [TestMethod]
@@ -69,7 +78,13 @@ public class NotebookReaderTests
     {
         File.WriteAllText(dateiPfad, "Das ist kein JSON");
 
-        Assert.Throws<JsonException>(() => NotebookReader.LoadNotebook(dateiPfad));
+        Assert.Throws<JsonException>(() =>
+
+        {
+
+            NotebookReader.LoadNotebook(dateiPfad);
+
+        });
     }
 
     [TestMethod]
@@ -77,6 +92,12 @@ public class NotebookReaderTests
     {
         File.WriteAllText(dateiPfad, "null");
 
-        Assert.ThrowsExactly<InvalidDataException>(() => NotebookReader.LoadNotebook(dateiPfad));
+        Assert.ThrowsExactly<InvalidDataException>(() =>
+
+        {
+
+            NotebookReader.LoadNotebook(dateiPfad);
+
+        });
     }
 }

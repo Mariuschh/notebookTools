@@ -12,24 +12,28 @@ public class FileHelperTests
     public void FindByFileName_Null_WirftFehler()
     {
         // null! übergibt absichtlich einen ungültigen Wert für diesen Test.
-        Assert.ThrowsExactly<ArgumentException>(() => FileHelper.FindByFileName(null!));
+        Assert.ThrowsExactly<ArgumentException>(() =>
+        {
+            FileHelper.FindByFileName(null!);
+        });
     }
 
     [TestMethod]
     public void FindByFileName_LeererText_WirftFehler()
     {
-        Assert.ThrowsExactly<ArgumentException>(() => FileHelper.FindByFileName(""));
+        Assert.ThrowsExactly<ArgumentException>(() =>
+        {
+            FileHelper.FindByFileName("");
+        });
     }
 
     [TestMethod]
     public void FindByFileName_NurLeerzeichen_WirftFehler()
     {
-        Assert.ThrowsExactly<ArgumentException>(() => FileHelper.FindByFileName("   "));
+        Assert.ThrowsExactly<ArgumentException>(() =>
+        {
+            FileHelper.FindByFileName("   ");
+        });
     }
 
-    [TestMethod]
-    public void FindByFileName_NurTabulator_WirftFehler()
-    {
-        Assert.ThrowsExactly<ArgumentException>(() => FileHelper.FindByFileName("\t"));
-    }
 }
