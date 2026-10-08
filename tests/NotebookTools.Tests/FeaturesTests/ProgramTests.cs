@@ -127,7 +127,7 @@ public class ProgramTests : ConsoleCommandTestBase
     {
         EingabeSetzen("Hallo\nNeu\nabbrechen\n");
         ProgrammAufrufen(new string[] { originalPfad, "findandreplace" });
-        StringAssert.Contains(ausgabe.ToString(), "Zeile(n) wurden geändert.");
+        StringAssert.Contains(ausgabe.ToString(), "Zelle(n) wurden geändert.");
         OriginalPruefen();
     }
 }

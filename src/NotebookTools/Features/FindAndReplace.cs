@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using NotebookTools.Notebook;
 
 namespace NotebookTools.Features
@@ -7,57 +7,65 @@ namespace NotebookTools.Features
     {
         public static void FindAndReplaces(Notebooks notebook, string originalPath)
         {
-             
-            Console.Write("Suchtext eingeben: "); string searchText = Console.ReadLine() ?? "";  // Suchtext vom Benutzer abfragen
-
-             
-            Console.Write("Ersetzen durch: "); string replaceText = Console.ReadLine() ?? ""; //  durch den der Suchtext ersetzt werden soll
-            Console.ForegroundColor = ConsoleColor.Green;
-
+            Console.Write("Suchtext eingeben: ");
+            string searchText = Console.ReadLine() ?? "";
             if (string.IsNullOrEmpty(searchText))
             {
-                Console.WriteLine("Kein Suchtext angegeben."); // Abbrechen, wenn kein Suchtext eingegeben wurde
+                Console.WriteLine("Kein Suchtext angegeben.");
                 return;
             }
 
-            
-            int replacements = 0;  // Anzahl der geänderten Zeilen
-
-            
-            foreach (var cell in notebook.Cells)  // Alle Zellen des Notebooks durchsuchen
+            Console.Write("Ersetzen durch: ");
+            string? replaceText = Console.ReadLine();
+            if (replaceText == null)
             {
-                 
-                if (cell.Source == null) // Zellen ohne Inhalt überspringen
-                    continue;
+                Console.WriteLine("Ersetzen abgebrochen.");
+                return;
+            }
 
-                 
-                for (int i = 0; i < cell.Source.Count; i++) // Alle Zeilen der aktuellen Zelle durchsuchen
+            int changedCells = 0;
+            foreach (NotebookCell cell in notebook.Cells)
+            {
+                if (cell.Source == null)
                 {
-                    string line = cell.Source[i] ?? "";
+                    continue;
+                }
 
-                     
-                    if (line.Contains(searchText)) // Prüfen, ob der Suchtext in der Zeile vorkommt
+                // Textstücke zusammenfügen, damit auch Treffer zwischen zwei Stücken gefunden werden.
+                string cellText = string.Join("", cell.Source);
+                string newText = cellText.Replace(searchText, replaceText);
+                if (newText != cellText)
+                {
+                    cell.Source.Clear();
+                    cell.Source.Add(newText);
+                    changedCells++;
+
+                    // Alte Ergebnisse passen nicht mehr zum geänderten Code.
+                    if (cell.Type == "code")
                     {
-                         
-                        cell.Source[i] = line.Replace(searchText, replaceText); // Suchtext durch den neuen Text ersetzen
-
-                        
-                        replacements++;  // Zähler erhöhen
+                        cell.Outputs.Clear();
+                        cell.ExecutionCount = null;
                     }
                 }
             }
 
-             
-            Console.WriteLine($"{replacements} Zeile(n) wurden geändert."); // Anzahl der geänderten Zeilen ausgeben
-
-            
-            if (replacements > 0)  // Notebook speichern, wenn Änderungen vorgenommen wurden
+            if (changedCells > 0)
             {
+                ConsoleColor previousColor = Console.ForegroundColor;
+                try
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine($"{changedCells} Zelle(n) wurden geändert.");
+                }
+                finally
+                {
+                    Console.ForegroundColor = previousColor;
+                }
                 CommandSave.Save(notebook, originalPath);
             }
             else
             {
-                Console.WriteLine("Es wurde nichts gespeichert, da kein Suchtext gefunden wurde.");
+                Console.WriteLine("Es wurde nichts gespeichert, da kein Suchtext gefunden wurde oder der Ersatz unverändert ist.");
             }
         }
     }
