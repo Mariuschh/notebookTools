@@ -30,6 +30,7 @@ namespace NotebookTools.Help
                  add                 Neue Zelle am Ende hinzufügen
                  delete <Zelle>      Zelle löschen
                  move <Zelle> <Ziel> Zelle an die Zielposition verschieben
+                 findandreplace      Text in allen Zellen suchen und ersetzen
                  help                Diese Hilfe anzeigen
 
                Beispiele:
@@ -37,6 +38,10 @@ namespace NotebookTools.Help
                  notebookTools beispiel content
                  notebookTools beispiel edit 2
                  notebookTools beispiel move 2 4
+                 notebookTools beispiel findandreplace
+
+                 Bei findandreplace gibst du Suchtext und Ersatz im Terminal ein.
+                 Groß- und Kleinschreibung wird beachtet. Ein leerer Ersatz entfernt den Suchtext.
 
                Notebooks zusammenführen:
                ----------------------------------------------------------------------
@@ -55,7 +60,7 @@ namespace NotebookTools.Help
 
                Änderungen speichern:
                ----------------------------------------------------------------------
-                 Nach edit, add, delete und move wirst du nach der Zieldatei gefragt.
+                 Nach edit, add, delete, move und findandreplace wirst du nach der Zieldatei gefragt.
                  Enter: als <Dateiname>_bearbeitet.ipynb neben dem Original speichern.
                  Eigener Dateipfad: an einem anderen Ort oder unter anderem Namen speichern.
                  Die Endung .ipynb wird auch beim Speichern automatisch ergänzt.
